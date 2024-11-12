@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>레시피 목록</title>
+    <style>
+        .truncate {
+            max-width: 50px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <h1>레시피 목록</h1>
+    <form action="/recipe/search" method="get">
+        <input type="text" name="id" placeholder="레시피 검색"/>
+        <button type="submit">검색</button>
+    </form>
+    <table>
+        <tr>
+            <th>레시피명</th>
+            <th>재료</th>
+            <th>조리법</th>
+            <th>요리시간(분)</th>
+            <th>난이도</th>
+            <th>동작</th>
+        </tr>
+        <tr th:each="recipe : ${recipe}">
+            <td><a th:href="@{/recipe/detail/{id}(id=${recipe.id})}" th:text="${recipe.recipeName}">레시피 명</a></td>
+            <td class="truncate" th:text="${recipe.ingredients}">재료</td>
+            <td class="truncate" th:text="${recipe.cookery}">조리법</td>
+            <td th:text="${recipe.cookingTime}">요리시간</td>
+            <td th:text="${recipe.difficultyLevel}">난이도</td>
+            <td>
+                <a th:href="@{/recipe/delete/{id}(id=${recipe.id})}">삭제</a>
+            </td>
+        </tr>
+    </table>
+    <a th:href="@{/recipe/new}">새 레시피 작성</a>
+</body>
+</html>

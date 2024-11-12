@@ -1,0 +1,65 @@
+package springfinal.recipe;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/recipe")
+public class RecipeController {
+    @Autowired
+    private RecipeService recipeService;
+
+    @GetMapping
+    public String listRecipes(Model model) {
+        model.addAttribute("recipe", recipeService.findAll());
+        return "recipe";
+    }
+
+    @GetMapping("/search")
+    public String searchRecipes(@RequestParam("id") long id, Model model) {
+        model.addAttribute("recipe", recipeService.findById(id));
+        return "recipe";
+    }
+
+    @GetMapping("/new")
+    public String newRecipeForm(Model model) {
+        model.addAttribute("recipe", new Recipe());
+        return "recipe-form";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String recipeDetail(@PathVariable Long id, Model model) {
+        model.addAttribute("recipe", recipeService.findById(id));
+        return "recipe-detail";
+    }
+
+    @PostMapping
+    public String saveRecipe(@ModelAttribute RecipeDTO recipe) {
+        recipeService.save(recipe);
+        return "redirect:/recipe";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteRecipe(@PathVariable Long id) {
+        recipeService.deleteById(id);
+        return "redirect:/recipe";
+    }
+
+    // 수정 페이지로 이동
+    @GetMapping("/edit/{id}")
+    public String editRecipeForm(@PathVariable Long id, Model model) {
+        model.addAttribute("recipe", recipeService.findById(id));
+        return "recipe-edit";
+    }
+
+    // 수정된 내용을 저장
+    @PostMapping("/update/{id}")
+    public String updateRecipe(@PathVariable Long id, @ModelAttribute RecipeDTO recipeDTO) {
+        recipeService.updateById(id, recipeDTO);
+        return "redirect:/recipe/detail/" + id;
+    }
+
+    //stream, lambda, optional (filter 검색 기능)
+}

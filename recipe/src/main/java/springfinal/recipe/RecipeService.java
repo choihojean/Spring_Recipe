@@ -7,6 +7,9 @@ public interface RecipeService {
     List<RecipeDTO> findAll();
     RecipeDTO findById(long id);
     void updateById(Long id, RecipeDTO recipeDTO);
+
+    List<RecipeDTO> findByName(String name);
+
     void save(RecipeDTO recipe);
     void deleteById(Long id);
 }

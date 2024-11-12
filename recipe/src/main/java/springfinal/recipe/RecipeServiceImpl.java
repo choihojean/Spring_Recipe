@@ -26,6 +26,14 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public List<RecipeDTO> findByName(String name) {
+        return recipeRepository.findAll().stream()
+                .map(Utils::toDTO)
+                .filter(recipe -> recipe.getRecipeName().equals(name))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void save(RecipeDTO recipeDTO) {
         Recipe recipe = Utils.toEntity(recipeDTO);
         recipeRepository.save(recipe);

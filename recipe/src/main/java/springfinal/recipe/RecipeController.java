@@ -18,8 +18,8 @@ public class RecipeController {
     }
 
     @GetMapping("/search")
-    public String searchRecipes(@RequestParam("id") long id, Model model) {
-        model.addAttribute("recipe", recipeService.findById(id));
+    public String searchRecipes(@RequestParam("name") String name, Model model) {
+        model.addAttribute("recipe", recipeService.findByName(name));
         return "recipe";
     }
 

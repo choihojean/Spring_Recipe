@@ -52,7 +52,6 @@ public class RecipeServiceImpl implements RecipeService {
         existingRecipe = Recipe.builder()
                 .id(existingRecipe.getId()) // 기존 ID 유지
                 .recipeName(recipeDTO.getRecipeName())
-                .ingredients(recipeDTO.getIngredients())
                 .cookery(recipeDTO.getCookery())
                 .cookingTime(recipeDTO.getCookingTime())
                 .difficultyLevel(recipeDTO.getDifficultyLevel())

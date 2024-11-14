@@ -29,7 +29,7 @@ public class RecipeServiceImpl implements RecipeService {
     public List<RecipeDTO> findByName(String name) {
         return recipeRepository.findAll().stream()
                 .map(Utils::toDTO)
-                .filter(recipe -> recipe.getRecipeName().equals(name))
+                .filter(recipe -> recipe.getRecipeName().contains(name))
                 .collect(Collectors.toList());
     }
 

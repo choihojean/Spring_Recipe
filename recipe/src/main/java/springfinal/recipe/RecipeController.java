@@ -20,6 +20,7 @@ public class RecipeController {
     @GetMapping("/search")
     public String searchRecipes(@RequestParam("name") String name, Model model) {
         model.addAttribute("recipe", recipeService.findByName(name));
+        model.addAttribute("isSearch", true);
         return "recipe";
     }
 
@@ -61,5 +62,5 @@ public class RecipeController {
         return "redirect:/recipe/detail/" + id;
     }
 
-    //stream, lambda, optional (filter 검색 기능)
+
 }

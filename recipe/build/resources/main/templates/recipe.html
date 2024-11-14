@@ -17,6 +17,7 @@
     <form action="/recipe/search" method="get">
         <input type="text" name="name" placeholder="레시피 검색"/>
         <button type="submit">검색</button>
+        <button type="button" onclick="window.location.href='/recipe'" th:if="${isSearch}">전체 목록 보기</button>
     </form>
     <table>
         <tr>

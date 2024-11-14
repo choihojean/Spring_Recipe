@@ -1,7 +1,10 @@
 package springfinal.recipe;
 
+import springfinal.recipe.dto.RecipeDTO;
+import springfinal.recipe.model.Recipe;
+
 public class Utils {
-    public static  RecipeDTO toDTO(Recipe recipe) {
+    public static RecipeDTO toDTO(Recipe recipe) {
         return RecipeDTO.builder()
                 .id(recipe.getId())
                 .recipeName(recipe.getRecipeName())

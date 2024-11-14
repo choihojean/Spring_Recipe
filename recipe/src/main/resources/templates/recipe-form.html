@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>새 레시피 작성</h1>
-<form th:action="@{/recipe}" th:object="${recipe}" method="post">
+<form th:action="@{/}" th:object="${recipe}" method="post">
     <label>레시피명: </label>
     <input type="text" th:field="*{recipeName}" /><br/>
     <label>재료: </label>

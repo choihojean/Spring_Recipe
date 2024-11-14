@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>레시피 수정</h1>
-<form th:action="@{/recipe/update/{id}(id=${recipe.id})}" th:object="${recipe}" method="post">
+<form th:action="@{/update/{id}(id=${recipe.id})}" th:object="${recipe}" method="post">
   <label>레시피명:</label>
   <input type="text" th:field="*{recipeName}" placeholder="레시피명"/><br/>
 
@@ -28,6 +28,6 @@
 
   <button type="submit">저장</button>
 </form>
-<a th:href="@{/recipe/detail/{id}(id=${recipe.id})}">취소</a>
+<a th:href="@{/detail/{id}(id=${recipe.id})}">취소</a>
 </body>
 </html>

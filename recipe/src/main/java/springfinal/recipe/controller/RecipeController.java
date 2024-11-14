@@ -9,7 +9,7 @@ import springfinal.recipe.service.RecipeService;
 import springfinal.recipe.model.Recipe;
 
 @Controller
-@RequestMapping("/recipe")
+@RequestMapping
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
@@ -42,13 +42,13 @@ public class RecipeController {
     @PostMapping
     public String saveRecipe(@ModelAttribute RecipeDTO recipe) {
         recipeService.save(recipe);
-        return "redirect:/recipe";
+        return "redirect:/";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteRecipe(@PathVariable Long id) {
         recipeService.deleteById(id);
-        return "redirect:/recipe";
+        return "redirect:/";
     }
 
     // 수정 페이지로 이동
@@ -62,8 +62,6 @@ public class RecipeController {
     @PostMapping("/update/{id}")
     public String updateRecipe(@PathVariable Long id, @ModelAttribute RecipeDTO recipeDTO) {
         recipeService.updateById(id, recipeDTO);
-        return "redirect:/recipe/detail/" + id;
+        return "redirect:/detail/" + id;
     }
-
-
 }

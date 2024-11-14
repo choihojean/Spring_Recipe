@@ -26,10 +26,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeDTO> findByName(String name) {
-        return recipeRepository.findAll().stream()
+    public List<RecipeDTO> findByRecipeNameContaining(String name) {
+        return recipeRepository.findByRecipeNameContaining(name).stream()
                 .map(Utils::toDTO)
-                .filter(recipe -> recipe.getRecipeName().contains(name))
                 .collect(Collectors.toList());
     }
 

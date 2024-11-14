@@ -19,7 +19,7 @@ public class RecipeController {
 
     @GetMapping("/search")
     public String searchRecipes(@RequestParam("name") String name, Model model) {
-        model.addAttribute("recipe", recipeService.findByName(name));
+        model.addAttribute("recipe", recipeService.findByRecipeNameContaining(name));
         model.addAttribute("isSearch", true);
         return "recipe";
     }

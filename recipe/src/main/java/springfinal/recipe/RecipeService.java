@@ -8,7 +8,7 @@ public interface RecipeService {
     RecipeDTO findById(long id);
     void updateById(Long id, RecipeDTO recipeDTO);
 
-    List<RecipeDTO> findByName(String name);
+    List<RecipeDTO> findByRecipeNameContaining(String name);
 
     void save(RecipeDTO recipe);
     void deleteById(Long id);

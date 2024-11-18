@@ -17,7 +17,7 @@ out/
 *.class
 
 # IDE 설정
-.idea
+../.idea/
 *.iws
 *.iml
 *.ipr

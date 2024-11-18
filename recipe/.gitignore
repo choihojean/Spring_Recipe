@@ -1,11 +1,27 @@
-HELP.md
-.gradle
+# Gradle
+.gradle/
 build/
+!gradle/wrapper/gradle-wrapper.properties
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### STS ###
+# Gradle 캐시 및 작업 파일
+*.log
+*.lock
+
+# 빌드 디렉토리
+/target/
+out/
+*.war
+*.ear
+*.jar
+*.class
+
+# IDE 설정
+.idea
+*.iws
+*.iml
+*.ipr
+out/
 .apt_generated
 .classpath
 .factorypath
@@ -14,25 +30,27 @@ build/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+# 환경 변수 및 민감 파일
+.env
+application.yml
 application.properties
+*.keystore
+*.p12
+*.pem
+*.crt
+*.key
 
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
+# VS Code
 .vscode/
+
+# OS 관련 파일
+.DS_Store
+Thumbs.db

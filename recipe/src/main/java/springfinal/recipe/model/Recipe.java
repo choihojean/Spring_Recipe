@@ -23,4 +23,8 @@ public class Recipe {
     private Integer difficultyLevel; // 난이도
     private List<Integer> recommend; // 추천
     private Boolean is_deleted; // 삭제 여부
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
 }

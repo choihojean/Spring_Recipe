@@ -8,20 +8,22 @@ public class Utils {
         return RecipeDTO.builder()
                 .id(recipe.getId())
                 .recipeName(recipe.getRecipeName())
-                .ingredients(recipe.getIngredients())
                 .cookery(recipe.getCookery())
                 .cookingTime(recipe.getCookingTime())
                 .difficultyLevel(recipe.getDifficultyLevel())
+                .recommend(recipe.getRecommend())
+                .is_deleted(recipe.getIs_deleted())
                 .build();
     }
     public static Recipe toEntity(RecipeDTO dto) {
         return Recipe.builder()
                 .id(dto.getId())
                 .recipeName(dto.getRecipeName())
-                .ingredients(dto.getIngredients())
                 .cookery(dto.getCookery())
                 .cookingTime(dto.getCookingTime())
                 .difficultyLevel(dto.getDifficultyLevel())
+                .recommend(dto.getRecommend())
+                .is_deleted(dto.getIs_deleted())
                 .build();
     }
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor @AllArgsConstructor
@@ -18,4 +19,7 @@ public class Ingredient {
     private Long id; // 인덱스
 
     private String ingredientName; // 재료명
+
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>(); // 레시피 재료
 }

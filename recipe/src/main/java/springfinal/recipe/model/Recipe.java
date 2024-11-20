@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor @AllArgsConstructor
@@ -22,9 +23,9 @@ public class Recipe {
     private Integer cookingTime; // 요리 시간
     private Integer difficultyLevel; // 난이도
     private List<Integer> recommend; // 추천
-    private Boolean is_deleted; // 삭제 여부
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>(); // 댓글들
 
+    private Boolean is_deleted; // 삭제 여부
 }

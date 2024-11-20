@@ -15,7 +15,13 @@ public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 인덱스
 
-    private String recipeId; // 레시피 인덱스
-    private String ingredientId; // 재료 인덱스
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe; // 레시피 조인
+
+    @ManyToOne
+    @JoinColumn(name = "ingredient_id")
+    private Ingredient ingredient; // 재료 조인
+
     private String qty; // 양
 }

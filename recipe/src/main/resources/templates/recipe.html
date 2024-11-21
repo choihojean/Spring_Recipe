@@ -22,16 +22,12 @@
     <table>
         <tr>
             <th>레시피명</th>
-            <th>재료</th>
-            <th>조리법</th>
             <th>요리시간(분)</th>
             <th>난이도</th>
             <th>동작</th>
         </tr>
         <tr th:each="recipe : ${recipe}">
             <td><a th:href="@{/detail/{id}(id=${recipe.id})}" th:text="${recipe.recipeName}">레시피 명</a></td>
-            <td class="truncate" th:text="${recipe.ingredients}">재료</td>
-            <td class="truncate" th:text="${recipe.cookery}">조리법</td>
             <td th:text="${recipe.cookingTime}">요리시간</td>
             <td th:text="${recipe.difficultyLevel}">난이도</td>
             <td>

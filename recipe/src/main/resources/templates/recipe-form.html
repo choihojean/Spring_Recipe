@@ -9,8 +9,6 @@
 <form th:action="@{/}" th:object="${recipe}" method="post">
     <label>레시피명: </label>
     <input type="text" th:field="*{recipeName}" /><br/>
-    <label>재료: </label>
-    <input type="text" th:field="*{ingredients}" /><br/>
     <label>조리법: </label>
     <textarea th:field="*{cookery}" required></textarea><br/>
     <label>요리시간: </label>
@@ -18,9 +16,16 @@
     <label>난이도: </label>
 
     <select th:field="*{difficultyLevel}">
-        <option value="쉬움">쉬움</option>
-        <option value="보통">보통</option>
-        <option value="어려움">어려움</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">8</option>
+        <option value="10">10</option>
     </select><br/>
     <button type="submit">저장</button>
 </form>

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import springfinal.recipe.model.RecipeIngredient;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ import java.util.List;
 public class IngredientDTO {
     private Long id; // 인덱스
     private String ingredientName; // 재료명
+    private List<RecipeIngredientDTO> recipeIngredients; // 레시피 재료
 }

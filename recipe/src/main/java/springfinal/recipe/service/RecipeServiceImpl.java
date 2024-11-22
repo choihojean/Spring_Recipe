@@ -2,11 +2,10 @@ package springfinal.recipe.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springfinal.recipe.Utils;
+import springfinal.recipe.mapper.RecipeMapper;
 import springfinal.recipe.dto.RecipeDTO;
 import springfinal.recipe.model.Recipe;
 import springfinal.recipe.repository.RecipeRepository;
-import springfinal.recipe.service.RecipeService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,27 +18,27 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> findAll() {
         return recipeRepository.findAll().stream()
-                .map(Utils::toDTO)
+                .map(RecipeMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public RecipeDTO findById(long id) {
         return recipeRepository.findById(id)
-                .map(Utils::toDTO)
+                .map(RecipeMapper::toDTO)
                 .orElse(null);
     }
 
     @Override
     public List<RecipeDTO> findByRecipeNameContaining(String name) {
         return recipeRepository.findByRecipeNameContaining(name).stream()
-                .map(Utils::toDTO)
+                .map(RecipeMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void save(RecipeDTO recipeDTO) {
-        Recipe recipe = Utils.toEntity(recipeDTO);
+        Recipe recipe = RecipeMapper.toEntity(recipeDTO);
         recipeRepository.save(recipe);
     }
 

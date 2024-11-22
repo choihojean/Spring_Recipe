@@ -3,48 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <title>레시피 목록</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
     <style>
-        .truncate {
-            max-width: 50px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .recipe-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .recipe-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 200px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .recipe-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        .recipe-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .recipe-details {
+            text-align: center;
+        }
+
+        .recipe-name {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .recipe-cookingTime {
+            font-size: 0.9rem;
+            color: #060606;
+            margin: 10px 0;
+        }
+
+        .recipe-difficultyLevel {
+            font-size: 1.1rem;
+            color: #FFEB3B;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            padding: 5px 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .search-container:hover {
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 30px;
+        }
+
+        .search-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .search-button:hover {
+            background-color: #42A5F5;
         }
     </style>
+    <script>
+        function navigateToDetail(id) {
+            window.location.href = '/detail/' + id;
+        }
+    </script>
 </head>
 <body>
     <h1>레시피 목록</h1>
-    <div th:if="${session.loggedInUser != null}">
-        <a th:href="@{/user/profile}" style="margin-right: 10px;">프로필</a>
-        <a th:href="@{/user/logout}">로그아웃</a>
+    <div>
+        <a th:href="@{/new}">새 레시피 작성</a>
+        <a th:href="@{/}" th:if="${isSearch}">전체 목록 보기</a>
     </div>
-    <div th:if="${session.loggedInUser == null}">
-        <a th:href="@{/user/login}" style="margin-right: 10px;">로그인</a>
-        <a th:href="@{/user/register}">회원가입</a>
-    </div>
-    <br />
-
-    <form action="/search" method="get">
-        <input type="text" name="name" placeholder="레시피 검색"/>
-        <button type="submit">검색</button>
-        <button type="button" onclick="window.location.href='/'" th:if="${isSearch}">전체 목록 보기</button>
+    <form action="/search" method="get" class="search-container">
+            <input type="text" name="name" placeholder="레시피 검색" class="search-input">
+            <button type="submit" class="search-button">
+                <span class="material-symbols-outlined">search</span>
+            </button>
     </form>
-    <table>
-        <tr>
-            <th>레시피명</th>
-            <th>요리시간(분)</th>
-            <th>난이도</th>
-            <th>동작</th>
-        </tr>
-        <tr th:each="recipe : ${recipe}">
-            <td><a th:href="@{/detail/{id}(id=${recipe.id})}" th:text="${recipe.recipeName}">레시피 명</a></td>
-            <td th:text="${recipe.cookingTime}">요리시간</td>
-            <td th:text="${recipe.difficultyLevel}">난이도</td>
-            <td>
-                <a th:href="@{/delete/{id}(id=${recipe.id})}">삭제</a>
-            </td>
-        </tr>
-    </table>
-    <a th:href="@{/new}">새 레시피 작성</a>
+    <div class="recipe-list">
+        <div th:each="recipe : ${recipe}" class="recipe-item" th:onclick="navigateToDetail([[${recipe.id}]])">
+            <img th:src="${recipe.img}" class="recipe-image">
+            <div class="recipe-details">
+                <h2 th:text="${recipe.recipeName}" class="recipe-name">pn</h2>
+                <p th:text="${recipe.cookingTime}" class="recipe-cookingTime">ct</p>
+                <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">dl</span>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -2,7 +2,7 @@ package springfinal.recipe.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springfinal.recipe.Utils;
+import springfinal.recipe.mapper.RecipeMapper;
 import springfinal.recipe.dto.UserDTO;
 import springfinal.recipe.model.User;
 import springfinal.recipe.repository.UserRepository;
@@ -20,14 +20,14 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
-                .map(Utils::toDTO)
+                .map(RecipeMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public UserDTO findById(Long id) {
         return userRepository.findById(id)
-                .map(Utils::toDTO)
+                .map(RecipeMapper::toDTO)
                 .orElse(null);
     }
 
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
             return false;
         }
 
-        User user = Utils.toEntity(userDTO);
+        User user = RecipeMapper.toEntity(userDTO);
         user = User.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByNickname(nickname)
                 .filter(user -> !user.getIs_deleted()) //탈퇴 계정은 제외
                 .filter(user -> user.getPassword().equals(password)) //비밀번호 검증
-                .map(Utils::toDTO)
+                .map(RecipeMapper::toDTO)
                 .orElse(null);
     }
 

@@ -14,11 +14,12 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @GetMapping
-    public String listRecipes(Model model) {
-        model.addAttribute("recipe", recipeService.findAll());
-        return "recipe";
-    }
+//main에서 사용하므로 필요하지 않을 듯
+//    @GetMapping
+//    public String listRecipes(Model model) {
+//        model.addAttribute("recipe", recipeService.findAll());
+//        return "recipe";
+//    }
 
     @GetMapping("/search")
     public String searchRecipes(@RequestParam("name") String name, Model model) {
@@ -34,7 +35,7 @@ public class RecipeController {
     }
 
     @GetMapping("/detail/{id}")
-    public String recipeDetail(@PathVariable Long id, Model model) {
+    public String recipeDetail(@PathVariable("id") Long id, Model model) {
         model.addAttribute("recipe", recipeService.findById(id));
         return "recipe-detail";
     }
@@ -46,21 +47,21 @@ public class RecipeController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteRecipe(@PathVariable Long id) {
+    public String deleteRecipe(@PathVariable("id") Long id) {
         recipeService.deleteById(id);
         return "redirect:/";
     }
 
     // 수정 페이지로 이동
     @GetMapping("/edit/{id}")
-    public String editRecipeForm(@PathVariable Long id, Model model) {
+    public String editRecipeForm(@PathVariable("id") Long id, Model model) {
         model.addAttribute("recipe", recipeService.findById(id));
         return "recipe-edit";
     }
 
     // 수정된 내용을 저장
     @PostMapping("/update/{id}")
-    public String updateRecipe(@PathVariable Long id, @ModelAttribute RecipeDTO recipeDTO) {
+    public String updateRecipe(@PathVariable("id") Long id, @ModelAttribute RecipeDTO recipeDTO) {
         recipeService.updateById(id, recipeDTO);
         return "redirect:/detail/" + id;
     }

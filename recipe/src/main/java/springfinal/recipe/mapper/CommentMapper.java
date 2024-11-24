@@ -4,6 +4,7 @@ import springfinal.recipe.dto.CommentDTO;
 import springfinal.recipe.model.Comment;
 import springfinal.recipe.model.Recipe;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class CommentMapper {
@@ -13,10 +14,15 @@ public class CommentMapper {
                 .userNickname(comment.getUserNickname())
                 .content(comment.getContent())
                 .recipeId(comment.getRecipe().getId())
-                .parentCommentId(comment.getParentComment().getId())
-                .childComments(comment.getChildComments().stream()
+                .parentCommentId(comment.getParentComment() != null ?
+                        comment.getRecipe().getId() : 0
+                )
+                .childComments(comment.getChildComments() != null ?
+                        comment.getChildComments().stream()
                         .map(CommentMapper::toDTO)
                         .collect(Collectors.toList())
+                        :
+                        null
                 )
                 .is_deleted(comment.getIs_deleted())
                 .build();
@@ -28,9 +34,12 @@ public class CommentMapper {
                 .content(dto.getContent())
                 .recipe(recipe)
                 .parentComment(parentComment)
-                .childComments(dto.getChildComments().stream()
-                        .map(cDto -> toEntity(cDto, null, null))
-                        .collect(Collectors.toList())
+                .childComments(dto.getChildComments() != null ?
+                        dto.getChildComments().stream()
+                                .map(cDto -> toEntity(cDto, recipe, null))
+                                .collect(Collectors.toList())
+                        :
+                        new ArrayList<>()
                 )
                 .is_deleted(dto.getIs_deleted())
                 .build();

@@ -1,6 +1,7 @@
 package springfinal.recipe.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import springfinal.recipe.mapper.RecipeMapper;
 import springfinal.recipe.dto.UserDTO;
@@ -15,6 +16,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
 
     @Override
@@ -32,6 +36,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UserDTO findByNickname(String nickname) {
+        return userRepository.findByNickname(nickname)
+                .filter(user -> !user.getIs_deleted())
+                .map(RecipeMapper::toDTO)
+                .orElse(null);
+    }
+
+    @Override
     public boolean registerUser(UserDTO userDTO) {
         if(userRepository.findByNickname(userDTO.getNickname()).isPresent()) {
             return false;
@@ -41,7 +53,7 @@ public class UserServiceImpl implements UserService{
         user = User.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
-                .password(user.getPassword())
+                .password(passwordEncoder.encode(user.getPassword()))
                 .is_deleted(false)
                 .build();
 
@@ -49,14 +61,14 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 
-    @Override
-    public UserDTO authenticate(String nickname, String password) {
-        return userRepository.findByNickname(nickname)
-                .filter(user -> !user.getIs_deleted()) //탈퇴 계정은 제외
-                .filter(user -> user.getPassword().equals(password)) //비밀번호 검증
-                .map(RecipeMapper::toDTO)
-                .orElse(null);
-    }
+//    @Override
+//    public UserDTO authenticate(String nickname, String password) {
+//        return userRepository.findByNickname(nickname)
+//                .filter(user -> !user.getIs_deleted()) //탈퇴 계정은 제외
+//                .filter(user -> passwordEncoder.matches(password, user.getPassword())) //비밀번호 검증
+//                .map(RecipeMapper::toDTO)
+//                .orElse(null);
+//    }
 
     @Override
     public void updateUser(Long id, UserDTO userDTO) {
@@ -66,7 +78,7 @@ public class UserServiceImpl implements UserService{
         existingUser = User.builder()
                 .id(existingUser.getId())
                 .nickname(userDTO.getNickname())
-                .password(userDTO.getPassword())
+                .password(passwordEncoder.encode(userDTO.getPassword()))
                 .is_deleted(existingUser.getIs_deleted())
                 .build();
 

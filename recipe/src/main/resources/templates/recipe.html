@@ -115,11 +115,11 @@
 </head>
 <body>
     <h1>레시피 목록</h1>
-    <div th:if="${session.loggedInUser != null}">
+    <div th:if="${#authentication.name != 'anonymousUser'}">
         <a th:href="@{/user/profile}" style="margin-right: 10px;">프로필</a>
         <a th:href="@{/user/logout}">로그아웃</a>
     </div>
-    <div th:if="${session.loggedInUser == null}">
+    <div th:if="${#authentication.name == 'anonymousUser'}">
         <a th:href="@{/user/login}" style="margin-right: 10px;">로그인</a>
         <a th:href="@{/user/register}">회원가입</a>
     </div>

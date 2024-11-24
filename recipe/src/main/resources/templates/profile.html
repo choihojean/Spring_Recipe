@@ -6,7 +6,9 @@
 </head>
 <body>
 <h1>프로필 페이지</h1>
-<p>안녕하세요, <span th:text="${user.nickname}"></span>님</p>
+<p th:if="${#authentication.authenticated}">
+    안녕하세요, <span th:text="${#authentication.name}"></span>님!
+</p>
 
 <a th:href="@{/user/edit}">내 정보 수정</a>
 <a th:href="@{/user/logout}">로그아웃</a>

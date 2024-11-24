@@ -18,5 +18,4 @@ public class CommentDTO {
     private Long parentCommentId; // 부모 댓글 인덱스
     private List<CommentDTO> childComments; // 자식 댓글들
     private Boolean is_deleted; // 삭제 여부
-
 }

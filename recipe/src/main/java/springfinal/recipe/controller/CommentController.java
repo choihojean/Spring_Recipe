@@ -17,8 +17,8 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("/api/comment/{id}")
-    public List<CommentDTO> readRecipeComment(@PathVariable("id") Long recipeId) {
+    @GetMapping("/api/comments")
+    public List<CommentDTO> readRecipeComment(@RequestParam("recipeId") Long recipeId) {
         return commentService.findByRecipeId(recipeId);
     }
 }

@@ -83,9 +83,10 @@
 
         function loadComments() {
             const cc = document.getElementById('comment-container');
-            const cid = window.location.pathname.split('/').pop();
+            const recipeId = window.location.pathname.split('/').pop();
+            const param = new URLSearchParams({"recipeId": recipeId});
 
-            fetch(`/api/comment/${cid}`)
+            fetch(`/api/comments?${param.toString()}`)
                 .then(res => {
                     if (!res.ok) {
                         throw new Error("error");

@@ -3,6 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>레시피 상세 정보</title>
+    <script>
+        function forEachData(cc, data, index) {
+            data.forEach(comment => {
+                const div = document.createElement('div');
+                div.textContent = `${comment.id} / 닉네임: ${comment.userNickname} / 내용: ${comment.content} / ${index}`;
+                cc.appendChild(div);
+                if(comment.childComments) {
+                    forEachData(cc, comment.childComments, index + 1);
+                }
+            });
+        }
+
+        function loadComments() {
+            const cc = document.getElementById('comment-container');
+            const cid = window.location.pathname.split('/').pop();
+
+            fetch(`/api/comment/${cid}`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error("error");
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    forEachData(cc, data, 0);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+
+        window.addEventListener('load', function () {
+            loadComments();
+        });
+    </script>
 </head>
 <body>
 <h1 th:text="${recipe.recipeName}">레시피</h1>
@@ -14,5 +49,8 @@
 
 <a th:href="@{/edit/{id}(id=${recipe.id})}">수정</a>
 <a th:href="@{/}">목록으로 돌아가기</a>
+<div id="comment-container">
+
+</div>
 </body>
 </html>

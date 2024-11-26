@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>재료 목록</title>
+</head>
+<body>
+<h1>재료 목록</h1>
+<a th:href="@{/ingredient/new}">새 재료 추가</a>
+<table>
+    <tr>
+        <th>재료 이름</th>
+        <th>동작</th>
+    </tr>
+    <tr th:each="ingredient : ${ingredients}">
+        <td th:text="${ingredient.ingredientName}"></td>
+        <td>
+            <a th:href="@{/ingredient/edit/{id}(id=${ingredient.id})}">수정</a>
+            <form th:action="@{/ingredient/delete/{id}(id=${ingredient.id})}" method="post" style="display: inline;">
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

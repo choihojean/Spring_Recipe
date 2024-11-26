@@ -3,12 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <title>레시피 상세 정보</title>
+    <style>
+        .comment-section {
+            margin-top: 30px;
+        }
+
+        .comment {
+            padding: 10px;
+            margin-bottom: 5px;
+        }
+
+        .comment-title {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .comment-content {
+            font-size: 1rem;
+            margin: 0 5px;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .comment-form button {
+            align-self: flex-end;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
     <script>
         function forEachData(cc, data, index) {
             data.forEach(comment => {
-                const div = document.createElement('div');
-                div.textContent = `${comment.id} / 닉네임: ${comment.userNickname} / 내용: ${comment.content} / ${index}`;
-                cc.appendChild(div);
+                const container = document.createElement('div');
+                container.style = index > 0 ? `margin-left: ${20 * index}px; border-left: 2px solid #ddd;` : "";
+
+                const commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment');
+
+                const commentTitle = document.createElement('div');
+                commentTitle.classList.add('comment-title');
+                commentTitle.textContent = `${comment.userNickname}`;
+
+                const commentContent = document.createElement('p');
+                commentContent.classList.add('comment-content');
+                commentContent.textContent = `${comment.content}`;
+
+                commentDiv.appendChild(commentTitle);
+                commentDiv.appendChild(commentContent);
+
+                container.appendChild(commentDiv);
+
+                cc.appendChild(container);
+
                 if(comment.childComments) {
                     forEachData(cc, comment.childComments, index + 1);
                 }
@@ -49,8 +115,12 @@
 
 <a th:href="@{/edit/{id}(id=${recipe.id})}">수정</a>
 <a th:href="@{/}">목록으로 돌아가기</a>
-<div id="comment-container">
-
+<div id="comment-container"></div>
+<div class="comment-section">
+    <div class="comment-form">
+        <textarea placeholder="댓글을 입력하세요..." rows="4" readonly></textarea>
+        <button type="button">댓글 작성</button>
+    </div>
 </div>
 </body>
 </html>

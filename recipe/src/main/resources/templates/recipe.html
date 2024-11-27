@@ -78,6 +78,15 @@
             box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
         }
 
+        .search-select {
+            width: 100px; /* 드롭박스 너비 */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
         .search-input {
             flex: 1;
             border: none;
@@ -129,13 +138,18 @@
         <a th:href="@{/}" th:if="${isSearch}">전체 목록 보기</a>
     </div>
     <form action="/search" method="get" class="search-container">
-            <input type="text" name="name" placeholder="레시피 검색" class="search-input">
-            <button type="submit" class="search-button">
-                <span class="material-symbols-outlined">search</span>
-            </button>
+        <select name="type" class="search-select" style="width: 150px; margin-right: 10px;">
+            <option value="recipe">레시피</option>
+            <option value="ingredient">재료</option>
+        </select>
+        <input type="text" name="name" placeholder="검색어 입력" class="search-input">
+        <button type="submit" class="search-button">
+            <span class="material-symbols-outlined">search</span>
+        </button>
     </form>
-    <div class="recipe-list">
-        <div th:each="recipe : ${recipe}" class="recipe-item" th:onclick="navigateToDetail([[${recipe.id}]])">
+
+    <div th:if="${type == 'recipe'}" class="recipe-list">
+        <div th:each="recipe : ${results}" class="recipe-item" th:onclick="navigateToDetail([[${recipe.id}]])">
             <img th:src="${recipe.img}" class="recipe-image">
             <div class="recipe-details">
                 <h2 th:text="${recipe.recipeName}" class="recipe-name">pn</h2>
@@ -143,6 +157,13 @@
                 <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">dl</span>
             </div>
         </div>
+    </div>
+
+    <div th:if="${type == 'ingredient'}">
+        <h2>검색된 재료</h2>
+        <ul>
+            <li th:each="ingredient : ${results}" th:text="${ingredient.ingredientName}">재료명</li>
+        </ul>
     </div>
 </body>
 </html>

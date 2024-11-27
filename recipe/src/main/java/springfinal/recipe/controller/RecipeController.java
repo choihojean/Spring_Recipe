@@ -4,15 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import springfinal.recipe.dto.IngredientDTO;
 import springfinal.recipe.dto.RecipeDTO;
+import springfinal.recipe.service.IngredientService;
 import springfinal.recipe.service.RecipeService;
 import springfinal.recipe.model.Recipe;
+
+import java.util.List;
 
 @Controller
 @RequestMapping
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
+
+    @Autowired
+    private IngredientService ingredientService;
 
 //main에서 사용하므로 필요하지 않을 듯
 //    @GetMapping
@@ -22,8 +29,15 @@ public class RecipeController {
 //    }
 
     @GetMapping("/search")
-    public String searchRecipes(@RequestParam("name") String name, Model model) {
-        model.addAttribute("recipe", recipeService.findByRecipeNameContaining(name));
+    public String searchRecipes(@RequestParam("type") String type, @RequestParam("name") String name, Model model) {
+        if ("recipe".equals(type)) {
+            List<RecipeDTO> recipes = recipeService.findByRecipeNameContaining(name);
+            model.addAttribute("results", recipes);
+        } else if ("ingredient".equals(type)) {
+            List<IngredientDTO> ingredients = ingredientService.findByIngredientNameContaining(name);
+            model.addAttribute("results", ingredients);
+        }
+        model.addAttribute("type", type);
         model.addAttribute("isSearch", true);
         return "recipe";
     }

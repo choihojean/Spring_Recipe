@@ -29,10 +29,16 @@ public class IngredientServiceImpl implements IngredientService {
                 .orElse(null);
     }
 
+    public List<IngredientDTO> findByIngredientNameContaining(String name) {
+        return ingredientRepository.findByIngredientNameContaining(name).stream()
+                .map(IngredientMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public boolean addIngredient(IngredientDTO ingredientDTO) {
-        if (ingredientRepository.findByIngredientName(ingredientDTO.getIngredientName()).isPresent()) {
-            return false; //중복된 재료 이름 안되게
+        if (ingredientRepository.existsByIngredientName(ingredientDTO.getIngredientName())) {
+            return false; // 중복된 재료명
         }
         Ingredient ingredient = IngredientMapper.toEntity(ingredientDTO);
         ingredientRepository.save(ingredient);
@@ -41,19 +47,24 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void updateIngredient(Long id, IngredientDTO ingredientDTO) {
-        Ingredient existingIngredient = ingredientRepository.findById(id)
+        Ingredient ingredient = ingredientRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("재료를 찾을 수 없음"));
 
-        existingIngredient = Ingredient.builder()
-                .id(existingIngredient.getId())
+        if (ingredientRepository.existsByIngredientName(ingredientDTO.getIngredientName()) &&
+                !ingredient.getIngredientName().equals(ingredientDTO.getIngredientName())) {
+            throw new IllegalArgumentException("중복된 재료명입니다.");
+        }
+
+        ingredient = Ingredient.builder()
+                .id(ingredient.getId())
                 .ingredientName(ingredientDTO.getIngredientName())
                 .build();
 
-        ingredientRepository.save(existingIngredient);
+        ingredientRepository.save(ingredient);
     }
 
-    @Override
-    public void deleteIngredient(Long id) {
-        ingredientRepository.deleteById(id);
-    }
+//    @Override
+//    public void deleteIngredient(Long id) {
+//        ingredientRepository.deleteById(id);
+//    }
 }

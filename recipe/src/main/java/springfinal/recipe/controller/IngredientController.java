@@ -1,56 +1,56 @@
 package springfinal.recipe.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfinal.recipe.dto.IngredientDTO;
 import springfinal.recipe.service.IngredientService;
 
-@Controller
-@RequestMapping("/ingredient")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/ingredient")
 public class IngredientController {
 
     @Autowired
     private IngredientService ingredientService;
 
     @GetMapping
-    public String listIngredient(Model model) {
-        model.addAttribute("ingredients", ingredientService.findAll());
-        return "ingredient-list";
+    public ResponseEntity<List<IngredientDTO>> getAllIngredients() {
+        return ResponseEntity.ok(ingredientService.findAll());
     }
 
-    @GetMapping("/new")
-    public String newIngredientForm(Model model) {
-        model.addAttribute("ingredient", new IngredientDTO());
-        return "ingredient-form";
-    }
-
-    @PostMapping("/new")
-    public String addIngredient(@ModelAttribute("ingredient") IngredientDTO ingredientDTO, Model model) {
-        if (!ingredientService.addIngredient(ingredientDTO)) {
-            model.addAttribute("error", "이미 추가된 재료");
-            return "ingredient-form";
-        }
-        return "redirect:/ingredient";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String editIngredientForm(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/{id}")
+    public ResponseEntity<IngredientDTO> getIngredientById(@PathVariable("id") Long id) {
         IngredientDTO ingredient = ingredientService.findById(id);
-        model.addAttribute("ingredient", ingredient);
-        return "ingredient-form";
+        if (ingredient == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ingredient);
     }
 
-    @PostMapping("/edit/{id}")
-    public String updateIngredient(@PathVariable("id") Long id, @ModelAttribute("ingredient") IngredientDTO ingredientDTO) {
-        ingredientService.updateIngredient(id, ingredientDTO);
-        return "redirect:/ingredient";
+    @PostMapping
+    public ResponseEntity<String> addIngredient(@RequestBody IngredientDTO ingredientDTO) {
+        boolean added = ingredientService.addIngredient(ingredientDTO);
+        if (!added) {
+            return ResponseEntity.badRequest().body("중복된 재료명입니다.");
+        }
+        return ResponseEntity.ok("재료가 추가되었습니다.");
     }
 
-    @PostMapping("/delete/{id}")
-    public String deleteIngredient(@PathVariable("id") Long id) {
-        ingredientService.deleteIngredient(id);
-        return "redirect:/ingredient";
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateIngredient(@PathVariable("id") Long id, @RequestBody IngredientDTO ingredientDTO) {
+        try {
+            ingredientService.updateIngredient(id, ingredientDTO);
+            return ResponseEntity.ok("재료가 수정되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<String> deleteIngredient(@PathVariable Long id) {
+//        ingredientService.deleteIngredient(id);
+//        return ResponseEntity.ok("재료가 삭제되었습니다.");
+//    }
 }

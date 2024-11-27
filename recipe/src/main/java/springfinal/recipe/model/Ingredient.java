@@ -20,6 +20,6 @@ public class Ingredient {
 
     private String ingredientName; // 재료명
 
-    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeIngredient> recipeIngredients = new ArrayList<>(); // 레시피 재료
+//    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<RecipeIngredient> recipeIngredients = new ArrayList<>(); // 레시피 재료
 }

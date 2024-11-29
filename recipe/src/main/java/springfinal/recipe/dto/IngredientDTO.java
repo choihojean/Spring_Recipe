@@ -14,5 +14,5 @@ import java.util.List;
 public class IngredientDTO {
     private Long id; // 인덱스
     private String ingredientName; // 재료명
-    //private List<RecipeIngredientDTO> recipeIngredients = new ArrayList<>(); // 레시피 재료
+    private List<RecipeIngredientDTO> recipeIngredients = new ArrayList<>(); // 레시피 재료
 }

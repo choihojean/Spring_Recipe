@@ -60,10 +60,10 @@ public class RecipeController {
 
         if (authentication != null && authentication.isAuthenticated()) {
             String currentUsername = authentication.getName();
-            boolean isWriter = recipe.getWriter().equals(currentUsername);
-            model.addAttribute("isWriter", isWriter); //작성자인지 여부 전달
+            boolean isUserNickname = recipe.getUserNickname().equals(currentUsername);
+            model.addAttribute("isUserNickname", isUserNickname); //작성자인지 여부 전달
         } else {
-            model.addAttribute("isWriter", false);
+            model.addAttribute("isUserNickname", false);
         }
 
         return "recipe-detail";
@@ -96,7 +96,7 @@ public class RecipeController {
         }
 
         String currentUsername = authentication.getName();
-        if (!recipe.getWriter().equals(currentUsername)) {
+        if (!recipe.getUserNickname().equals(currentUsername)) {
             return "redirect:/recipe/detail/" + id; //작성자가 아닌 경우 상세 페이지로
         }
 
@@ -114,7 +114,7 @@ public class RecipeController {
         }
 
         String currentUsername = authentication.getName();
-        if (!existingRecipe.getWriter().equals(currentUsername)) {
+        if (!existingRecipe.getUserNickname().equals(currentUsername)) {
             return "redirect:/recipe/detail/" + id; //작성자가 아닌 경우
         }
 

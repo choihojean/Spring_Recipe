@@ -9,7 +9,7 @@ public class RecipeMapper {
     public static RecipeDTO toDTO(Recipe recipe) {
         return RecipeDTO.builder()
                 .id(recipe.getId())
-                .writer(recipe.getWriter().getNickname())
+                .userNickname(recipe.getUserNickname().getNickname())
                 .recipeName(recipe.getRecipeName())
                 .cookery(recipe.getCookery())
                 .cookingTime(recipe.getCookingTime())

@@ -52,7 +52,7 @@ public class RecipeServiceImpl implements RecipeService {
                 .cookery(recipe.getCookery())
                 .cookingTime(recipe.getCookingTime())
                 .difficultyLevel(recipe.getDifficultyLevel())
-                .writer(user) // 작성자 설정
+                .userNickname(user) // 작성자 설정
                 .build();
         recipeRepository.save(recipe);
     }

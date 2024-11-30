@@ -63,7 +63,10 @@
             });
 
             selectIngredients = selectIngredients.filter(ing => setIngredient.has(ing.id));
+
             selectIngredients.sort((a, b) => a.id - b.id);
+
+            console.log(selectIngredients);
 
             selectIngredients.forEach(ing => {
                 const ingredientP = document.createElement('p');
@@ -72,7 +75,7 @@
                 ingredients.appendChild(ingredientP);
 
                 ingredientP.addEventListener("click", function () {
-                    addIngredient(ingredient);
+                    addIngredient(ing);
                 });
             })
         }

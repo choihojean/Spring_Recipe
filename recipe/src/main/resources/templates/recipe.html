@@ -134,8 +134,8 @@
     </div>
     <br />
     <div>
-        <a th:href="@{/new}">새 레시피 작성</a>
-        <a th:href="@{/}" th:if="${isSearch}">전체 목록 보기</a>
+        <a th:href="@{/new}" th:if="${#authentication.name != 'anonymousUser'}">새 레시피 작성</a>
+        <a th:href="@{/main}" th:if="${isSearch}">전체 목록 보기</a>
     </div>
     <form action="/search" method="get" class="search-container">
         <select name="type" class="search-select" style="width: 150px; margin-right: 10px;">
@@ -153,6 +153,7 @@
             <img th:src="${recipe.img}" class="recipe-image">
             <div class="recipe-details">
                 <h2 th:text="${recipe.recipeName}" class="recipe-name">pn</h2>
+                <p th:text="'작성자: ' + ${recipe.writer}">wt</p>
                 <p th:text="${recipe.cookingTime}" class="recipe-cookingTime">ct</p>
                 <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">dl</span>
             </div>

@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import springfinal.recipe.mapper.RecipeMapper;
 import springfinal.recipe.dto.RecipeDTO;
 import springfinal.recipe.model.Recipe;
+import springfinal.recipe.model.User;
 import springfinal.recipe.repository.RecipeRepository;
+import springfinal.recipe.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +16,9 @@ import java.util.stream.Collectors;
 public class RecipeServiceImpl implements RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<RecipeDTO> findAll() {
@@ -37,8 +42,18 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void save(RecipeDTO recipeDTO) {
+    public void save(RecipeDTO recipeDTO, String username) {
+        User user = userRepository.findByNickname(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         Recipe recipe = RecipeMapper.toEntity(recipeDTO);
+        recipe = Recipe.builder()
+                .id(recipe.getId())
+                .recipeName(recipe.getRecipeName())
+                .cookery(recipe.getCookery())
+                .cookingTime(recipe.getCookingTime())
+                .difficultyLevel(recipe.getDifficultyLevel())
+                .writer(user) // 작성자 설정
+                .build();
         recipeRepository.save(recipe);
     }
 

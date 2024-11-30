@@ -18,6 +18,10 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 인덱스
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User writer; //레시피 작성자
+
     private String recipeName; // 레시피명
     private String cookery; // 조리법
     private Integer cookingTime; // 요리 시간

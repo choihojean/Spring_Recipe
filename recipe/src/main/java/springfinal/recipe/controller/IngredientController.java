@@ -2,8 +2,10 @@ package springfinal.recipe.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springfinal.recipe.dto.IngredientDTO;
+import springfinal.recipe.dto.RecipeDTO;
 import springfinal.recipe.service.IngredientService;
 
 import java.util.List;
@@ -46,6 +48,11 @@ public class IngredientController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/search")
+    public List<IngredientDTO> searchRecipes(@RequestParam("name") String name) {
+        return ingredientService.findByIngredientNameContaining(name);
     }
 
 //    @DeleteMapping("/{id}")

@@ -62,11 +62,11 @@
 
                 const commentTitle = document.createElement('div');
                 commentTitle.classList.add('comment-title');
-                commentTitle.textContent = `${comment.userNickname}`;
+                commentTitle.textContent = comment.userNickname;
 
                 const commentContent = document.createElement('p');
                 commentContent.classList.add('comment-content');
-                commentContent.textContent = `${comment.content}`;
+                commentContent.textContent = comment.content;
 
                 commentDiv.appendChild(commentTitle);
                 commentDiv.appendChild(commentContent);

@@ -34,7 +34,7 @@
                                 result.appendChild(ingredientP);
 
                                 ingredientP.addEventListener("click", function () {
-                                    addIngredient(ingredient);
+                                    editIngredient(ingredient);
 
                                     search.value = '';
                                     result.replaceChildren();
@@ -48,11 +48,11 @@
             });
         }
 
-        function addIngredient(ingredient) {
+        function editIngredient(ingredient) {
             const ingredients = document.getElementById('ingredients');
             ingredients.replaceChildren();
             let setIngredient = new Set();
-            selectIngredients.push(ingredient)
+            selectIngredients.push(ingredient);
 
             selectIngredients.forEach(ing => {
                 if (setIngredient.has(ing.id)) {
@@ -66,8 +66,6 @@
 
             selectIngredients.sort((a, b) => a.id - b.id);
 
-            console.log(selectIngredients);
-
             selectIngredients.forEach(ing => {
                 const ingredientP = document.createElement('p');
                 ingredientP.textContent = ing.ingredientName;
@@ -75,9 +73,16 @@
                 ingredients.appendChild(ingredientP);
 
                 ingredientP.addEventListener("click", function () {
-                    addIngredient(ing);
+                    editIngredient(ing);
                 });
             })
+
+            const hiddenIngredient = document.createElement('input');
+            hiddenIngredient.type = "hidden";
+            hiddenIngredient.name = "ingredients"
+            hiddenIngredient.value = JSON.stringify(selectIngredients);
+
+            ingredients.appendChild(hiddenIngredient);
         }
 
         window.addEventListener('load', searchIngredients);

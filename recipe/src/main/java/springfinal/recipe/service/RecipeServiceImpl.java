@@ -6,6 +6,7 @@ import springfinal.recipe.mapper.RecipeMapper;
 import springfinal.recipe.dto.RecipeDTO;
 import springfinal.recipe.model.Recipe;
 import springfinal.recipe.model.User;
+import springfinal.recipe.repository.RecipeIngredientRepository;
 import springfinal.recipe.repository.RecipeRepository;
 import springfinal.recipe.repository.UserRepository;
 
@@ -42,7 +43,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void save(RecipeDTO recipeDTO, String username) {
+    public Long save(RecipeDTO recipeDTO, String username) {
         User user = userRepository.findByNickname(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         Recipe recipe = RecipeMapper.toEntity(recipeDTO);
@@ -54,7 +55,8 @@ public class RecipeServiceImpl implements RecipeService {
                 .difficultyLevel(recipe.getDifficultyLevel())
                 .userNickname(user) // 작성자 설정
                 .build();
-        recipeRepository.save(recipe);
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        return savedRecipe.getId();
     }
 
     @Override

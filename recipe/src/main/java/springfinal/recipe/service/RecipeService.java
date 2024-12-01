@@ -11,6 +11,6 @@ public interface RecipeService {
 
     List<RecipeDTO> findByRecipeNameContaining(String name);
 
-    void save(RecipeDTO recipe, String username);
+    Long save(RecipeDTO recipe, String username);
     void deleteById(Long id);
 }

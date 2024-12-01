@@ -15,11 +15,6 @@ public class RecipeIngredientController {
     @Autowired
     private RecipeIngredientService service;
 
-    @PostMapping
-    public void addRecipeIngredient(@RequestBody RecipeIngredientDTO dto) {
-        service.saveRecipeIngredient(dto);
-    }
-
     @GetMapping("/recipe/{recipeId}")
     public List<RecipeIngredientDTO> getIngredientsByRecipeId(@PathVariable("recipeId") Long recipeId) {
         return service.getIngredientsByRecipeId(recipeId);

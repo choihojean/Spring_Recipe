@@ -1,5 +1,6 @@
 package springfinal.recipe.controller;
 
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import springfinal.recipe.dto.IngredientDTO;
 import springfinal.recipe.dto.RecipeDTO;
 import springfinal.recipe.service.IngredientService;
+import springfinal.recipe.service.RecipeIngredientService;
 import springfinal.recipe.service.RecipeService;
 import springfinal.recipe.model.Recipe;
 
@@ -21,6 +23,9 @@ public class RecipeController {
 
     @Autowired
     private IngredientService ingredientService;
+
+    @Autowired
+    private RecipeIngredientService recipeIngredientService;
 
 //main에서 사용하므로 필요하지 않을 듯
 //    @GetMapping
@@ -70,13 +75,15 @@ public class RecipeController {
     }
 
     @PostMapping
-    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO, Authentication authentication) {
+    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO, @RequestParam("ingredients") String ingredientsStr, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login"; // 로그인 필요
         }
-
         String username = authentication.getName();
-        recipeService.save(recipeDTO, username);
+        Long recipeId = recipeService.save(recipeDTO, username);
+        Gson gson = new Gson();
+        List<IngredientDTO> ingredients = List.of(gson.fromJson(ingredientsStr, IngredientDTO[].class));
+        recipeIngredientService.saveRecipeIngredients(recipeId, ingredients);
         return "redirect:/main";
     }
 

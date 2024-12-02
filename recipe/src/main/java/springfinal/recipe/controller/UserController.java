@@ -31,7 +31,7 @@ public class UserController {
     public String registerUser(@ModelAttribute("user") UserDTO userDTO, Model model) {
         boolean isRegistered = userService.registerUser(userDTO);
         if (isRegistered) {
-            return "redirect:/user/login";
+            return "redirect:/main";
         } else {
             model.addAttribute("error", "이미 사용 중인 닉네임입니다.");
             return "register";

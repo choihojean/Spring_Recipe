@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 레시피 목록</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
+    <style>
+        .recipe-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .recipe-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 200px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .recipe-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        .recipe-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .recipe-details {
+            text-align: center;
+        }
+
+        .recipe-name {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .recipe-cookingTime {
+            font-size: 0.9rem;
+            color: #060606;
+            margin: 10px 0;
+        }
+
+        .recipe-difficultyLevel {
+            font-size: 1.1rem;
+            color: #FFEB3B;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+    <script>
+        function navigateToDetail(id) {
+            window.location.href = '/detail/' + id;
+        }
+    </script>
+</head>
+<body>
+<h1 th:text="${username} + '의 레시피 목록'"></h1>
+<div class="recipe-list">
+    <div th:each="recipe : ${recipes}" class="recipe-item" th:onclick="navigateToDetail([[${recipe.id}]])">
+        <img th:src="${recipe.img}" class="recipe-image">
+        <div class="recipe-details">
+            <h2 th:text="${recipe.recipeName}" class="recipe-name">레시피명</h2>
+            <p th:text="'작성자: ' + ${recipe.userNickname.nickname}" class="recipe-cookingTime">작성자</p>
+            <p th:text="${recipe.cookingTime} + '분'" class="recipe-cookingTime">요리시간</p>
+            <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">난이도</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

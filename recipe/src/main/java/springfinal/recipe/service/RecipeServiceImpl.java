@@ -6,7 +6,6 @@ import springfinal.recipe.mapper.RecipeMapper;
 import springfinal.recipe.dto.RecipeDTO;
 import springfinal.recipe.model.Recipe;
 import springfinal.recipe.model.User;
-import springfinal.recipe.repository.RecipeIngredientRepository;
 import springfinal.recipe.repository.RecipeRepository;
 import springfinal.recipe.repository.UserRepository;
 
@@ -33,6 +32,15 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findById(id)
                 .map(RecipeMapper::toDTO)
                 .orElse(null);
+    }
+
+    @Override
+    public List<RecipeDTO> findByUserNickname(String username) {
+        User user = userRepository.findByNickname(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return recipeRepository.findByUserNickname(user).stream()
+                .map(RecipeMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -64,13 +72,13 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe existingRecipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
 
-        // 기존 엔티티의 필드 업데이트
         existingRecipe = Recipe.builder()
-                .id(existingRecipe.getId()) // 기존 ID 유지
+                .id(existingRecipe.getId()) //기존 ID 유지
                 .recipeName(recipeDTO.getRecipeName())
                 .cookery(recipeDTO.getCookery())
                 .cookingTime(recipeDTO.getCookingTime())
                 .difficultyLevel(recipeDTO.getDifficultyLevel())
+                .userNickname(existingRecipe.getUserNickname())
                 .build();
 
         recipeRepository.save(existingRecipe);

@@ -9,7 +9,7 @@
 <p th:if="${#authentication.authenticated}">
     안녕하세요, <span th:text="${#authentication.name}"></span>님!
 </p>
-
+<a th:href="@{/user-recipes/{username}(username=${#authentication.name})}" style="display: block; margin-top: 10px;">내 레시피 목록</a>
 <a th:href="@{/user/edit}">내 정보 수정</a>
 <a th:href="@{/user/logout}">로그아웃</a>
 

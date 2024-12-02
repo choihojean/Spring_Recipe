@@ -153,7 +153,7 @@
             <img th:src="${recipe.img}" class="recipe-image">
             <div class="recipe-details">
                 <h2 th:text="${recipe.recipeName}" class="recipe-name">pn</h2>
-                <p th:text="'작성자: ' + ${recipe.userNickname}">wt</p>
+                <p th:text="'작성자: ' + ${recipe.userNickname.nickname}">wt</p>
                 <p th:text="${recipe.cookingTime}" class="recipe-cookingTime">ct</p>
                 <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">dl</span>
             </div>

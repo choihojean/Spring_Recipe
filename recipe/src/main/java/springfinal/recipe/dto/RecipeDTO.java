@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor @AllArgsConstructor
 public class RecipeDTO {
     private Long id; // 인덱스
-    private String userNickname; //레시피 작성자
+    private UserDTO userNickname; //레시피 작성자
     private String recipeName; // 레시피명
     private String cookery; // 조리법
     private Integer cookingTime; // 요리 시간

@@ -9,6 +9,8 @@ public interface RecipeService {
     RecipeDTO findById(long id);
     void updateById(Long id, RecipeDTO recipeDTO);
 
+    List<RecipeDTO> findByUserNickname(String username);
+
     List<RecipeDTO> findByRecipeNameContaining(String name);
 
     Long save(RecipeDTO recipe, String username);

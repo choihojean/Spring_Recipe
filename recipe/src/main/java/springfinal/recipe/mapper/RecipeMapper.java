@@ -9,7 +9,7 @@ public class RecipeMapper {
     public static RecipeDTO toDTO(Recipe recipe) {
         return RecipeDTO.builder()
                 .id(recipe.getId())
-                .userNickname(recipe.getUserNickname().getNickname())
+                .userNickname(toDTO(recipe.getUserNickname()))
                 .recipeName(recipe.getRecipeName())
                 .cookery(recipe.getCookery())
                 .cookingTime(recipe.getCookingTime())
@@ -22,6 +22,10 @@ public class RecipeMapper {
     public static Recipe toEntity(RecipeDTO dto) {
         return Recipe.builder()
                 .id(dto.getId())
+                .userNickname(User.builder()
+                        .id(dto.getUserNickname().getId())
+                        .nickname(dto.getUserNickname().getNickname())
+                        .build())
                 .recipeName(dto.getRecipeName())
                 .cookery(dto.getCookery())
                 .cookingTime(dto.getCookingTime())

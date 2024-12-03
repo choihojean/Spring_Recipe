@@ -16,7 +16,8 @@ public class MainController {
 
     @GetMapping("/main") // 메인 페이지
     public String mainPage(Model model) {
-        model.addAttribute("recipe", recipeService.findAll());
+        model.addAttribute("results", recipeService.findAll());
+        model.addAttribute("type", "recipe");
         return "recipe";
     }
 }

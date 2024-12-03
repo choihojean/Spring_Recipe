@@ -147,7 +147,6 @@
             <span class="material-symbols-outlined">search</span>
         </button>
     </form>
-
     <div th:if="${type == 'recipe'}" class="recipe-list">
         <div th:each="recipe : ${results}" class="recipe-item" th:onclick="navigateToDetail([[${recipe.id}]])">
             <img th:src="${recipe.img}" class="recipe-image">

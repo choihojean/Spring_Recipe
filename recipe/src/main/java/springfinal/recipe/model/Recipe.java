@@ -27,7 +27,9 @@ public class Recipe {
     private Integer cookingTime; // 요리 시간
     private Integer difficultyLevel; // 난이도
     private String img; // 이미지 URL
-    private List<Integer> recommend; // 추천
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommend> recommendations = new ArrayList<>(); // 추천
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>(); // 댓글들

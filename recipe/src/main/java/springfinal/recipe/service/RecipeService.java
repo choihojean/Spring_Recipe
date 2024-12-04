@@ -15,4 +15,9 @@ public interface RecipeService {
 
     Long save(RecipeDTO recipe, String username);
     void deleteById(Long id);
+
+    void addRecommendation(Long recipeId, String username);
+    void removeRecommendation(Long recipeId, String username);
+    Long countRecommendations(Long recipeId);
+    boolean isUserRecommended(Long recipeId, String username);
 }

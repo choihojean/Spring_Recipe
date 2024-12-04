@@ -32,13 +32,6 @@ public class RecipeController {
     @Autowired
     private UserService userService;
 
-//main에서 사용하므로 필요하지 않을 듯
-//    @GetMapping
-//    public String listRecipes(Model model) {
-//        model.addAttribute("recipe", recipeService.findAll());
-//        return "recipe";
-//    }
-
     @GetMapping("/search")
     public String searchRecipes(@RequestParam("type") String type, @RequestParam("name") String name, Model model) {
         if ("recipe".equals(type)) {
@@ -80,9 +73,16 @@ public class RecipeController {
             String currentUsername = authentication.getName();
             boolean isUserNickname = recipe.getUserNickname().getNickname().equals(currentUsername);
             model.addAttribute("isUserNickname", isUserNickname); //작성자인지 여부 전달
+
+            boolean isRecommended = recipeService.isUserRecommended(id, currentUsername);
+            model.addAttribute("isRecommended", isRecommended); //사용자가 추천했는지 여부 전달
         } else {
             model.addAttribute("isUserNickname", false);
+            model.addAttribute("isRecommended", false);
         }
+
+        Long recommendCount = recipeService.countRecommendations(id);
+        model.addAttribute("recommendCount", recommendCount);
 
         return "recipe-detail";
     }
@@ -157,5 +157,27 @@ public class RecipeController {
 
         recipeService.updateById(id, recipeDTO);
         return "redirect:/recipe/detail/" + id; //수정 완료 후 상세 페이지로
+    }
+
+    @PostMapping("/{id}/recommend")
+    public String recommendRecipe(@PathVariable("id") Long id, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login"; // 로그인 필요
+        }
+
+        String username = authentication.getName();
+        recipeService.addRecommendation(id, username);
+        return "redirect:/detail/" + id;
+    }
+
+    @PostMapping("/{id}/remove-recommend")
+    public String removeRecommendRecipe(@PathVariable("id") Long id, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login"; // 로그인 필요
+        }
+
+        String username = authentication.getName();
+        recipeService.removeRecommendation(id, username);
+        return "redirect:/detail/" + id;
     }
 }

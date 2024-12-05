@@ -68,6 +68,7 @@ public class RecipeServiceImpl implements RecipeService {
                 .cookingTime(recipe.getCookingTime())
                 .difficultyLevel(recipe.getDifficultyLevel())
                 .userNickname(user) // 작성자 설정
+                .img(recipe.getImg())
                 .build();
         Recipe savedRecipe = recipeRepository.save(recipe);
         return savedRecipe.getId();

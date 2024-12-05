@@ -6,15 +6,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfinal.recipe.dto.IngredientDTO;
 import springfinal.recipe.dto.RecipeDTO;
 import springfinal.recipe.dto.UserDTO;
-import springfinal.recipe.service.IngredientService;
-import springfinal.recipe.service.RecipeIngredientService;
-import springfinal.recipe.service.RecipeService;
+import springfinal.recipe.service.*;
 import springfinal.recipe.model.Recipe;
-import springfinal.recipe.service.UserService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -31,6 +30,9 @@ public class RecipeController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ImageService imageService;
 
     @GetMapping("/search")
     public String searchRecipes(@RequestParam("type") String type, @RequestParam("name") String name, Model model) {
@@ -87,8 +89,8 @@ public class RecipeController {
         return "recipe-detail";
     }
 
-    @PostMapping
-    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO, @RequestParam("ingredients") String ingredientsStr, Authentication authentication) {
+    @PostMapping("/")
+    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO, @RequestParam("image") MultipartFile image, @RequestParam("ingredients") String ingredientsStr, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login"; // 로그인 필요
         }
@@ -104,6 +106,14 @@ public class RecipeController {
 
         // recipeDTO에 UserDTO 설정
         recipeDTO.setUserNickname(userDTO);
+
+        // 이미지 로컬에 저장
+        try {
+            String imgUrl = imageService.saveImage(image);
+            recipeDTO.setImg(imgUrl);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
         // 레시피 저장
         Long recipeId = recipeService.save(recipeDTO, username);

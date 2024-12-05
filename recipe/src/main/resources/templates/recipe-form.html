@@ -90,7 +90,11 @@
 </head>
 <body>
     <h1>새 레시피 작성</h1>
-    <form th:action="@{/}" th:object="${recipe}" method="post">
+    <form th:action="@{/}" th:object="${recipe}" method="POST" enctype="multipart/form-data">
+        <div>
+            <input type="file" id="img" name="image" accept="image/*">
+        </div>
+
         <label>레시피명: </label>
         <input type="text" th:field="*{recipeName}" /><br/>
 

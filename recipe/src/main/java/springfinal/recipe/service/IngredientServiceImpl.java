@@ -26,7 +26,7 @@ public class IngredientServiceImpl implements IngredientService {
     public IngredientDTO findById(Long id) {
         return ingredientRepository.findById(id)
                 .map(IngredientMapper::toDTO)
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("재료를 찾을 수 없음"));
     }
 
     public List<IngredientDTO> findByIngredientNameContaining(String name) {
@@ -38,7 +38,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public boolean addIngredient(IngredientDTO ingredientDTO) {
         if (ingredientRepository.existsByIngredientName(ingredientDTO.getIngredientName())) {
-            return false; // 중복된 재료명
+            throw new IllegalArgumentException("중복된 재료명");
         }
         Ingredient ingredient = IngredientMapper.toEntity(ingredientDTO);
         ingredientRepository.save(ingredient);

@@ -11,7 +11,9 @@ public class RecipeIngredientMapper {
                 .id(entity.getId())
                 .recipeId(entity.getRecipe().getId())
                 .ingredientId(entity.getIngredient().getId())
+                .ingredientName(entity.getIngredient().getIngredientName())
                 .qty(entity.getQty())
+                .unit(entity.getUnit())
                 .build();
     }
 
@@ -21,6 +23,7 @@ public class RecipeIngredientMapper {
                 .recipe(Recipe.builder().id(dto.getRecipeId()).build())
                 .ingredient(Ingredient.builder().id(dto.getIngredientId()).build())
                 .qty(dto.getQty())
+                .unit(dto.getUnit())
                 .build();
     }
 }

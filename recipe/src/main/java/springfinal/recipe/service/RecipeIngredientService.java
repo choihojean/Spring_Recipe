@@ -5,7 +5,7 @@ import springfinal.recipe.dto.RecipeIngredientDTO;
 import java.util.List;
 
 public interface RecipeIngredientService {
-    void saveRecipeIngredients(Long recipeId, List<IngredientDTO> ingredients);
+    void saveRecipeIngredients(Long recipeId, List<RecipeIngredientDTO> ingredients);
     List<RecipeIngredientDTO> getIngredientsByRecipeId(Long recipeId);
     List<RecipeIngredientDTO> getRecipesByIngredientId(Long ingredientId);
     void deleteRecipeIngredient(Long id);

@@ -19,7 +19,4 @@ public class Ingredient {
     private Long id; // 인덱스
 
     private String ingredientName; // 재료명
-
-    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeIngredient> recipeIngredients = new ArrayList<>(); // 레시피 재료
 }

@@ -24,4 +24,5 @@ public class RecipeIngredient {
     private Ingredient ingredient; // 재료 조인
 
     private String qty; // 양
+    private String unit; //단위
 }

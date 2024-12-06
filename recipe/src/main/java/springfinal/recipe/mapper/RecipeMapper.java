@@ -19,11 +19,14 @@ public class RecipeMapper {
                 .cookingTime(recipe.getCookingTime())
                 .difficultyLevel(recipe.getDifficultyLevel())
                 .img(recipe.getImg())
+                .ingredients(recipe.getIngredients().stream()
+                        .map(RecipeIngredientMapper::toDTO)
+                        .collect(Collectors.toList())) // 재료 매핑 추가
                 .is_deleted(recipe.getIs_deleted())
                 .build();
     }
     public static Recipe toEntity(RecipeDTO dto) {
-        return Recipe.builder()
+        Recipe recipe = Recipe.builder()
                 .id(dto.getId())
                 .userNickname(User.builder()
                         .id(dto.getUserNickname().getId())
@@ -36,6 +39,14 @@ public class RecipeMapper {
                 .img(dto.getImg())
                 .is_deleted(dto.getIs_deleted())
                 .build();
+
+        //재료 매핑 추가
+        if (dto.getIngredients() != null) {
+            recipe.setIngredients(dto.getIngredients().stream()
+                    .map(RecipeIngredientMapper::toEntity)
+                    .collect(Collectors.toList()));
+        }
+        return recipe;
     }
 
     public static UserDTO toDTO(User user) {

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springfinal.recipe.dto.IngredientDTO;
 import springfinal.recipe.dto.RecipeDTO;
+import springfinal.recipe.dto.RecipeIngredientDTO;
 import springfinal.recipe.dto.UserDTO;
 import springfinal.recipe.service.IngredientService;
 import springfinal.recipe.service.RecipeIngredientService;
@@ -93,10 +94,10 @@ public class RecipeController {
             return "redirect:/user/login"; // 로그인 필요
         }
 
-        // 현재 로그인된 사용자 이름 가져오기
+        //현재 로그인된 사용자 이름 가져오기
         String username = authentication.getName();
 
-        // username을 통해 UserDTO 생성
+        //username을 통해 UserDTO 생성
         UserDTO userDTO = userService.findByNickname(username); // UserService를 통해 UserDTO 조회
         if (userDTO == null) {
             throw new IllegalArgumentException("사용자를 찾을 수 없습니다: " + username);
@@ -110,8 +111,11 @@ public class RecipeController {
 
         // 재료 저장
         Gson gson = new Gson();
-        List<IngredientDTO> ingredients = List.of(gson.fromJson(ingredientsStr, IngredientDTO[].class));
-        recipeIngredientService.saveRecipeIngredients(recipeId, ingredients);
+        List<RecipeIngredientDTO> recipeIngredients = List.of(gson.fromJson(ingredientsStr, RecipeIngredientDTO[].class));
+
+        recipeIngredients.forEach(ri -> ri.setRecipeId(recipeId)); //각 RecipeIngredientDTO에 recipeId 설정
+
+        recipeIngredientService.saveRecipeIngredients(recipeId, recipeIngredients);
 
         return "redirect:/main";
     }

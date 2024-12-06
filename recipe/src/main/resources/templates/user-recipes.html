@@ -74,10 +74,11 @@
     <div th:each="recipe : ${recipes}" class="recipe-item" th:onclick="navigateToDetail([[${recipe.id}]])">
         <img th:src="${recipe.img}" class="recipe-image">
         <div class="recipe-details">
-            <h2 th:text="${recipe.recipeName}" class="recipe-name">레시피명</h2>
-            <p th:text="'작성자: ' + ${recipe.userNickname.nickname}" class="recipe-cookingTime">작성자</p>
-            <p th:text="${recipe.cookingTime} + '분'" class="recipe-cookingTime">요리시간</p>
-            <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">난이도</span>
+            <h2 th:text="${recipe.recipeName}" class="recipe-name">pn</h2>
+            <p th:text="'작성자: ' + ${recipe.userNickname.nickname}">wt</p>
+            <p th:text="'🕔: ' + ${recipe.cookingTime} + '분'" class="recipe-cookingTime">ct</p>
+            <p>난이도: <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">dl</span></p>
+            <p th:text="'👍: ' + ${recipe.recommendCount}" class="recipe-recommendCount"></p>
         </div>
     </div>
 </div>

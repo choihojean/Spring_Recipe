@@ -153,8 +153,9 @@
             <div class="recipe-details">
                 <h2 th:text="${recipe.recipeName}" class="recipe-name">pn</h2>
                 <p th:text="'작성자: ' + ${recipe.userNickname.nickname}">wt</p>
-                <p th:text="${recipe.cookingTime}" class="recipe-cookingTime">ct</p>
-                <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">dl</span>
+                <p th:text="'🕔: ' + ${recipe.cookingTime} + '분'" class="recipe-cookingTime">ct</p>
+                <p>난이도: <span th:text="${recipe.difficultyLevel}" class="recipe-difficultyLevel">dl</span></p>
+                <p th:text="'👍: ' + ${recipe.recommendCount}" class="recipe-recommendCount"></p>
             </div>
         </div>
     </div>

@@ -29,7 +29,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> findAll() {
         return recipeRepository.findAll().stream()
-                .map(RecipeMapper::toDTO)
+                .map(recipe -> {
+                    RecipeDTO dto = RecipeMapper.toDTO(recipe);
+                    dto.setRecommendCount((long) recipe.getRecommendations().size());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -52,7 +56,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> findByRecipeNameContaining(String name) {
         return recipeRepository.findByRecipeNameContaining(name).stream()
-                .map(RecipeMapper::toDTO)
+                .map(recipe -> {
+                    RecipeDTO dto = RecipeMapper.toDTO(recipe);
+                    dto.setRecommendCount((long) recipe.getRecommendations().size());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 

@@ -22,6 +22,10 @@ public class RecipeMapper {
                 .ingredients(recipe.getIngredients().stream()
                         .map(RecipeIngredientMapper::toDTO)
                         .collect(Collectors.toList())) // 재료 매핑 추가
+                .recommendations(recipe.getRecommendations().stream()
+                        .map(RecipeMapper::toDTO)
+                        .collect(Collectors.toList()))
+                .recommendCount((long) recipe.getRecommendations().size())
                 .is_deleted(recipe.getIs_deleted())
                 .build();
     }

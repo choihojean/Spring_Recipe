@@ -19,6 +19,8 @@ public class RecipeDTO {
     private Integer cookingTime; // 요리 시간
     private Integer difficultyLevel; // 난이도
     private String img; // 이미지 URL
+    private List<RecommendDTO> recommendations; //추천 내역
+    private Long recommendCount; //추천 수
     private List<CommentDTO> comments; // 댓글들
     private Boolean is_deleted; // 삭제 여부
 }

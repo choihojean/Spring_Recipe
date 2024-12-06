@@ -109,7 +109,7 @@ public class RecipeController {
 
         // 이미지 로컬에 저장
         try {
-            String imgUrl = imageService.saveImage(image);
+            String imgUrl = imageService.saveImageToS3(image);
             recipeDTO.setImg(imgUrl);
         } catch (Exception e) {
             System.out.println(e);

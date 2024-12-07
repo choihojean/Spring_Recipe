@@ -90,8 +90,8 @@ public class RecipeController {
         return "recipe-detail";
     }
 
-    @PostMapping("/")
-    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO, @RequestParam("image") MultipartFile image, @RequestParam("ingredients") String ingredientsStr, Authentication authentication) {
+    @PostMapping(value = "/", consumes = "multipart/form-data")
+    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO, @RequestParam("image") MultipartFile image, @RequestParam("ingredientsStr") String ingredientsStr, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login"; // 로그인 필요
         }
@@ -108,7 +108,7 @@ public class RecipeController {
         // recipeDTO에 UserDTO 설정
         recipeDTO.setUserNickname(userDTO);
 
-        // 이미지 로컬에 저장
+        // 이미지 s3에 저장
         try {
             String imgUrl = imageService.saveImageToS3(image);
             recipeDTO.setImg(imgUrl);

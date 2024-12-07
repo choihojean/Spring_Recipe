@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>새 레시피 작성</title>
     <script>
-        let selectIngredients = [];
+        let selectRecipeIngredients = [];
 
         function searchIngredients() {
             const search = document.getElementById('search');
@@ -51,22 +51,27 @@
         function editIngredient(ingredient) {
             const ingredients = document.getElementById('ingredients');
             ingredients.replaceChildren();
-            let setIngredient = new Set();
-            selectIngredients.push(ingredient);
+            let setRecipeIngredient = new Set();
+            selectRecipeIngredients.push({
+                "ingredientId": ingredient["id"] ? ingredient["id"] : ingredient["ingredientId"],
+                "ingredientName": ingredient["ingredientName"],
+                "qty": "",
+                "unit": ""
+            });
 
-            selectIngredients.forEach(ing => {
-                if (setIngredient.has(ing.id)) {
-                    setIngredient.delete(ing.id);
+            selectRecipeIngredients.forEach(ing => {
+                if (setRecipeIngredient.has(ing.ingredientId)) {
+                    setRecipeIngredient.delete(ing.ingredientId);
                 } else {
-                    setIngredient.add(ing.id);
+                    setRecipeIngredient.add(ing.ingredientId);
                 }
             });
 
-            selectIngredients = selectIngredients.filter(ing => setIngredient.has(ing.id));
+            selectRecipeIngredients = selectRecipeIngredients.filter(ing => setRecipeIngredient.has(ing.ingredientId));
 
-            selectIngredients.sort((a, b) => a.id - b.id);
+            selectRecipeIngredients.sort((a, b) => a.ingredientId - b.ingredientId);
 
-            selectIngredients.forEach(ing => {
+            selectRecipeIngredients.forEach(ing => {
                 const ingredientP = document.createElement('p');
                 ingredientP.textContent = ing.ingredientName;
 
@@ -79,8 +84,8 @@
 
             const hiddenIngredient = document.createElement('input');
             hiddenIngredient.type = "hidden";
-            hiddenIngredient.name = "ingredientsStr"
-            hiddenIngredient.value = JSON.stringify(selectIngredients);
+            hiddenIngredient.name = "ingredientsStr";
+            hiddenIngredient.value = JSON.stringify(selectRecipeIngredients);
 
             ingredients.appendChild(hiddenIngredient);
         }

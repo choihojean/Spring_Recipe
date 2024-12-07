@@ -1,16 +1,12 @@
 package springfinal.recipe.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import springfinal.recipe.dto.CommentDTO;
 import springfinal.recipe.service.CommentService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class CommentController {
@@ -18,7 +14,23 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping("/api/comments") // api/comments?recipeId={recipeId}
-    public List<CommentDTO> readRecipeComment(@RequestParam("recipeId") Long recipeId) {
+    public List<CommentDTO> readRecipeComments(@RequestParam("recipeId") Long recipeId) {
         return commentService.findByRecipeId(recipeId);
+    }
+
+    @PostMapping("/api/comments") // api/comments
+    public String CreateRecipeComment(@RequestParam("recipeId") Long recipeId,
+                                      @RequestParam("content") String content,
+                                      @RequestParam(name = "parentCommentId", required = false) Long parentCommentId,
+                                      Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "<script>window.location.href='/user/login';</script>"; // 로그인 필요
+        }
+
+        String userNickname = authentication.getName();
+
+        commentService.saveComment(recipeId, content, parentCommentId, userNickname);
+
+        return String.format("<script>window.location.href='/detail/%d';</script>", recipeId);
     }
 }

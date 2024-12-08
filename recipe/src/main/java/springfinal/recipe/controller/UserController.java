@@ -108,8 +108,9 @@ public class UserController {
             return "redirect:/user/login";
         }
 
-        userService.updateUser(loggedInUser.getId(), userDTO);
-        return "redirect:/user/profile"; // 수정 완료 후 프로필 페이지로 이동
+        boolean isSuccess = userService.updateUser(loggedInUser.getId(), userDTO);
+
+        return isSuccess ? "redirect:/user/profile" : "redirect:/user/edit";
     }
 
 //    //로그아웃 처리

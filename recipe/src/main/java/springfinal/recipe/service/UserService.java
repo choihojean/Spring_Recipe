@@ -9,7 +9,7 @@ public interface UserService {
     UserDTO findById(Long id);
     //UserDTO authenticate(String nickname, String password);
     boolean registerUser(UserDTO userDTO);
-    void updateUser(Long id, UserDTO userDTO);
+    boolean updateUser(Long id, UserDTO userDTO);
     void deleteUser(Long id);
     UserDTO findByNickname(String nickname);
 }

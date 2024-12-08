@@ -71,9 +71,13 @@ public class UserServiceImpl implements UserService{
 //    }
 
     @Override
-    public void updateUser(Long id, UserDTO userDTO) {
+    public boolean updateUser(Long id, UserDTO userDTO) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+        if(!existingUser.getNickname().equals(userDTO.getNickname()) && userRepository.findByNickname(userDTO.getNickname()).isPresent()) {
+            return false;
+        }
 
         existingUser = User.builder()
                 .id(existingUser.getId())
@@ -83,6 +87,7 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         userRepository.save(existingUser);
+        return true;
     }
 
     @Override

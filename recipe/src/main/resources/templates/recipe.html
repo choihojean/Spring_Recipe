@@ -161,6 +161,10 @@
             window.location.href = '/detail/' + id;
         }
 
+        function navigateToIngredient(id) {
+            window.location.href = '/ingredient/' + id;
+        }
+
         window.addEventListener('load', searchIngredients);
     </script>
 </head>
@@ -206,7 +210,7 @@
     <div th:if="${type == 'ingredient'}">
         <h2>검색된 재료</h2>
         <ul>
-            <li th:each="ingredient : ${results}" th:text="${ingredient.ingredientName}">재료명</li>
+            <li th:each="ingredient : ${results}" th:text="${ingredient.ingredientName}" th:onclick="navigateToIngredient([[${ingredient.id}]])">재료명</li>
         </ul>
     </div>
 </body>

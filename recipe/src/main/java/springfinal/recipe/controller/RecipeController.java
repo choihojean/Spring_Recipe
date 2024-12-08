@@ -197,4 +197,15 @@ public class RecipeController {
         recipeService.removeRecommendation(id, username);
         return "redirect:/detail/" + id;
     }
+
+    @GetMapping("/ingredient/{id}")
+    public String getRecipeToIngredient(@PathVariable("id") Long id, Model model) {
+        List<RecipeDTO> recipes = recipeService.findByIngredientsIngredientId(id);
+        System.out.println(recipes);
+        model.addAttribute("results", recipes);
+        model.addAttribute("type", "recipe");
+        model.addAttribute("isSearch", true);
+        return "recipe";
+    }
+
 }

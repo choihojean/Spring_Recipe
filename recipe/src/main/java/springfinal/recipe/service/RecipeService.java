@@ -13,7 +13,10 @@ public interface RecipeService {
 
     List<RecipeDTO> findByRecipeNameContaining(String name);
 
+    List<RecipeDTO> findByIngredientsIngredientId(Long id);
+
     Long save(RecipeDTO recipe, String username);
+
     void deleteById(Long id);
 
     void addRecommendation(Long recipeId, String username);

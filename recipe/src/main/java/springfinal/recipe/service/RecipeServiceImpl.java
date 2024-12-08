@@ -65,6 +65,15 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public List<RecipeDTO> findByIngredientsIngredientId(Long id) {
+        return recipeRepository.findAll().stream()
+                .filter(recipe -> recipe.getIngredients().stream()
+                        .anyMatch(recipeIngredient -> recipeIngredient.getIngredient().getId().equals(id)))
+                .map(RecipeMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Long save(RecipeDTO recipeDTO, String username) {
         User user = userRepository.findByNickname(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));

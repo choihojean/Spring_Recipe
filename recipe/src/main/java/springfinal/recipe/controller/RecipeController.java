@@ -91,7 +91,10 @@ public class RecipeController {
     }
 
     @PostMapping(value = "/", consumes = "multipart/form-data")
-    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO, @RequestParam("image") MultipartFile image, @RequestParam("ingredientsStr") String ingredientsStr, Authentication authentication) {
+    public String saveRecipe(@ModelAttribute RecipeDTO recipeDTO,
+                             @RequestParam("image") MultipartFile image,
+                             @RequestParam("ingredientsStr") String ingredientsStr,
+                             Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login"; // 로그인 필요
         }

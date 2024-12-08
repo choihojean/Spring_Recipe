@@ -78,6 +78,51 @@
                 if(comment.childComments) {
                     forEachData(cc, comment.childComments, index + 1);
                 }
+
+                commentDiv.addEventListener('click', function () {
+                    if(container.childElementCount == 1) {
+                        const commentForm = document.createElement('form');
+                        commentForm.id = `comment${comment.id}`;
+                        commentForm.method = "POST";
+                        commentForm.action = "/api/comments";
+                        commentForm.className = "comment-form";
+
+                        const commentContent = document.createElement('textarea');
+                        commentContent.placeholder = "댓글을 입력하세요...";
+                        commentContent.rows = 2;
+                        commentContent.name = "content";
+
+                        const hiddenRecipeId = document.createElement('input');
+                        hiddenRecipeId.type = "hidden";
+                        hiddenRecipeId.name = "recipeId";
+                        hiddenRecipeId.value = comment.recipeId;
+
+                        const hiddenParentCommentId = document.createElement('input');
+                        hiddenParentCommentId.type = "hidden";
+                        hiddenParentCommentId.name = "parentCommentId";
+                        hiddenParentCommentId.value = comment.id;
+
+                        const submitButton = document.createElement('button');
+                        submitButton.type = "submit";
+                        submitButton.textContent = "댓글 작성";
+
+                        commentForm.appendChild(commentContent);
+                        commentForm.appendChild(hiddenRecipeId);
+                        commentForm.appendChild(hiddenParentCommentId);
+                        commentForm.appendChild(submitButton);
+
+                        container.appendChild(commentForm);
+                    }
+                    else {
+                        const commentForm = document.getElementById(`comment${comment.id}`);
+                        if(commentForm.style.display === "") {
+                            commentForm.style.display = "none";
+                        }
+                        else {
+                            commentForm.style.display = "";
+                        }
+                    }
+                });
             });
         }
 
@@ -108,6 +153,7 @@
 </head>
 <body>
 <h1 th:text="${recipe.recipeName}">레시피</h1>
+<img th:src="${recipe.img}">
 <p><strong>작성자:</strong> <a th:href="@{/user-recipes/{username}(username=${recipe.userNickname.nickname})}" th:text="${recipe.userNickname.nickname}">작성자 닉네임</a></p>
 <p><strong>재료:</strong></p>
 <div class="ingredients-list">
@@ -125,7 +171,6 @@
 
 <p>추천 수: <span th:text="${recommendCount}">0</span></p>
 
-
 <div th:if="${#authentication.name != 'anonymousUser'}">
     <form th:action="@{'/' + ${recipe.id} + '/recommend'}" method="post" th:if="${!isRecommended}">
         <button type="submit">추천하기</button>
@@ -139,12 +184,14 @@
     <a th:href="@{/edit/{id}(id=${recipe.id})}" class="button">수정</a>
 </div>
 <a th:href="@{/main}">목록으로 돌아가기</a>
+
 <div id="comment-container"></div>
 <div class="comment-section">
-    <div class="comment-form">
-        <textarea placeholder="댓글을 입력하세요..." rows="4" readonly></textarea>
-        <button type="button">댓글 작성</button>
-    </div>
+    <form th:action="@{/api/comments}" method="POST" class="comment-form">
+        <textarea placeholder="댓글을 입력하세요..." rows="4" name="content"></textarea>
+        <input type="hidden" name="recipeId" th:value="${recipe.id}">
+        <button type="submit">댓글 작성</button>
+    </form>
 </div>
 </body>
 </html>

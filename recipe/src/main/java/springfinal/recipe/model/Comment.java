@@ -33,4 +33,8 @@ public class Comment {
     private List<Comment> childComments = new ArrayList<>(); // 자식 댓글들
 
     private Boolean is_deleted; // 삭제 여부
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
 }

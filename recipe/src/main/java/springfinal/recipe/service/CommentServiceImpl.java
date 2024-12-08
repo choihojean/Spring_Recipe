@@ -3,6 +3,7 @@ package springfinal.recipe.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springfinal.recipe.dto.CommentDTO;
+import springfinal.recipe.dto.UserDTO;
 import springfinal.recipe.mapper.CommentMapper;
 import springfinal.recipe.model.Comment;
 import springfinal.recipe.model.Recipe;
@@ -11,6 +12,8 @@ import springfinal.recipe.repository.RecipeRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -47,5 +50,12 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         commentRepository.save(comment);
+    }
+
+    @Override
+    public void updateCommentByUser(String nickname, UserDTO userDTO) {
+        List<Comment> comments = commentRepository.findByUserNickname(nickname);
+        comments.forEach(comment -> comment.setUserNickname(userDTO.getNickname()));
+        commentRepository.saveAll(comments);
     }
 }

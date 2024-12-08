@@ -159,21 +159,43 @@ public class RecipeController {
 
     // 수정된 내용을 저장
     @PostMapping("/update/{id}")
-    public String updateRecipe(@PathVariable("id") Long id, @ModelAttribute RecipeDTO recipeDTO, Authentication authentication) {
+    public String updateRecipe(@PathVariable("id") Long id,
+                               @ModelAttribute RecipeDTO recipeDTO,
+                               @RequestParam(value = "image", required = false) MultipartFile image,
+                               @RequestParam("ingredientsStr") String ingredientsStr,
+                               Authentication authentication) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login"; //로그인되지 않은 경우
         }
 
+        // 작성자 확인
         RecipeDTO existingRecipe = recipeService.findById(id);
-
         String currentUsername = authentication.getName();
         if (!existingRecipe.getUserNickname().getNickname().equals(currentUsername)) {
-            return "redirect:/recipe/detail/" + id; //작성자가 아닌 경우
+            return "redirect:/detail/" + id; // 작성자가 아닌 경우
         }
 
+        // 이미지 업데이트 (새 이미지가 제공된 경우)
+        if (image != null && !image.isEmpty()) {
+            try {
+                String imgUrl = imageService.saveImageToS3(image);
+                recipeDTO.setImg(imgUrl);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("이미지 업로드 실패");
+            }
+        }
+
+        // 재료 업데이트
+        Gson gson = new Gson();
+        List<RecipeIngredientDTO> ingredients = List.of(gson.fromJson(ingredientsStr, RecipeIngredientDTO[].class));
+        recipeDTO.setIngredients(ingredients);
+
+        // 레시피 업데이트
         recipeService.updateById(id, recipeDTO);
-        return "redirect:/recipe/detail/" + id; //수정 완료 후 상세 페이지로
+
+        return "redirect:/detail/" + id; // 수정 완료 후 상세 페이지로 이동
     }
 
     @PostMapping("/{id}/recommend")

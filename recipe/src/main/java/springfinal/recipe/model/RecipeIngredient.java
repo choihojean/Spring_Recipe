@@ -25,4 +25,20 @@ public class RecipeIngredient {
 
     private String qty; // 양
     private String unit; //단위
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public void setQty(String qty) {
+        this.qty = qty;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 }

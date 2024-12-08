@@ -172,10 +172,12 @@
 <p>추천 수: <span th:text="${recommendCount}">0</span></p>
 
 <div th:if="${#authentication.name != 'anonymousUser'}">
-    <form th:action="@{'/' + ${recipe.id} + '/recommend'}" method="post" th:if="${!isRecommended}">
+    <form th:action="@{'/' + ${recipe.id} + '/recommend'}" method="post"
+          th:if="${!isUserNickname && !isRecommended}">
         <button type="submit">추천하기</button>
     </form>
-    <form th:action="@{'/' + ${recipe.id} + '/remove-recommend'}" method="post" th:if="${isRecommended}">
+    <form th:action="@{'/' + ${recipe.id} + '/remove-recommend'}" method="post"
+          th:if="${!isUserNickname && isRecommended}">
         <button type="submit">추천 취소</button>
     </form>
 </div>

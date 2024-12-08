@@ -141,6 +141,9 @@ public class RecipeServiceImpl implements RecipeService {
         User user = userRepository.findByNickname(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
+        if (recipe.getUserNickname().getNickname().equals(username)) {
+            throw new IllegalArgumentException("자신의 레시피는 추천할 수 없습니다.");
+        }
         if (recommendRepository.findByRecipeAndUser(recipe, user).isPresent()) {
             return; //이미 추천한 경우
         }

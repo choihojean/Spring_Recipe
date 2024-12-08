@@ -87,13 +87,20 @@
                     updateHiddenField();
                 });
 
-                const unit = document.createElement('input');
-                unit.type = 'text';
-                unit.placeholder = '단위';
-                unit.value = ingredient.unit;
+                const unit = document.createElement('select');
                 unit.style.width = '70px';
-                unit.style.height = '25px';
-                unit.addEventListener('input', function () {
+                unit.style.height = '30px';
+                const unitOptions = ['g', 'kg', 'mL', 'L', '개', '티스푼', '테이블 스푼', '컵', '꼬집', '쪽', '단'];
+                unitOptions.forEach(optionValue => {
+                    const option = document.createElement('option');
+                    option.value = optionValue;
+                    option.textContent = optionValue;
+                    if (ingredient.unit === optionValue) {
+                    option.selected = true;
+                    }
+                    unit.appendChild(option);
+                });
+                unit.addEventListener('change', function () {
                     selectRecipeIngredients[index].unit = unit.value;
                     updateHiddenField();
                 });

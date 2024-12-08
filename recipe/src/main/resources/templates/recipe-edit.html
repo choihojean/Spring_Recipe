@@ -3,32 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <title>레시피 수정</title>
+  <script>
+    let selectRecipeIngredients = /*[[${recipe.ingredients}]]*/ [];
+
+    function populateIngredients() {
+        updateIngredientsList();
+    }
+
+    function searchIngredients() {
+        const search = document.getElementById('search');
+        const result = document.getElementById('result');
+
+        search.addEventListener('input', function () {
+            if (search.value === "") {
+                result.replaceChildren();
+            } else {
+                result.replaceChildren();
+                const param = new URLSearchParams({ "name": search.value });
+                fetch(`/api/ingredient/search?${param.toString()}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        result.replaceChildren();
+                        data.forEach(ingredient => {
+                            const ingredientP = document.createElement('p');
+                            ingredientP.textContent = ingredient.ingredientName;
+
+                            result.appendChild(ingredientP);
+
+                            ingredientP.addEventListener("click", function () {
+                                addIngredient(ingredient);
+
+                                search.value = '';
+                                result.replaceChildren();
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        });
+    }
+
+    function addIngredient(ingredient) {
+        const isExisting = selectRecipeIngredients.some(ing => ing.ingredientId === ingredient.id);
+
+        if (!isExisting) {
+            selectRecipeIngredients.push({
+                "ingredientId": ingredient.id,
+                "ingredientName": ingredient.ingredientName,
+                "qty": "",
+                "unit": ""
+            });
+        }
+
+        updateIngredientsList();
+    }
+
+    function updateIngredientsList() {
+        const ingredientsDiv = document.getElementById('ingredients');
+        ingredientsDiv.replaceChildren();
+
+        selectRecipeIngredients.forEach((ingredient, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.marginBottom = '5px';
+
+            const ingredientP = document.createElement('p');
+            ingredientP.textContent = ingredient.ingredientName;
+
+            const qty = document.createElement('input');
+            qty.type = 'number';
+            qty.placeholder = '수량';
+            qty.value = ingredient.qty || '';
+            qty.style.width = '70px';
+            qty.addEventListener('input', function () {
+                selectRecipeIngredients[index].qty = qty.value;
+                updateHiddenField();
+            });
+
+            const unit = document.createElement('select');
+            const unitOptions = ['g', 'kg', 'mL', 'L', '개', '티스푼', '테이블 스푼', '컵', '꼬집', '쪽', '단'];
+            unitOptions.forEach(optionValue => {
+                const option = document.createElement('option');
+                option.value = optionValue;
+                option.textContent = optionValue;
+                if (ingredient.unit === optionValue) {
+                    option.selected = true;
+                }
+                unit.appendChild(option);
+            });
+            unit.addEventListener('change', function () {
+                selectRecipeIngredients[index].unit = unit.value;
+                updateHiddenField();
+            });
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = '삭제';
+            removeButton.addEventListener('click', function () {
+                selectRecipeIngredients.splice(index, 1);
+                updateIngredientsList();
+            });
+
+            wrapper.appendChild(ingredientP);
+            wrapper.appendChild(qty);
+            wrapper.appendChild(unit);
+            wrapper.appendChild(removeButton);
+            ingredientsDiv.appendChild(wrapper);
+        });
+
+        updateHiddenField();
+    }
+
+    function updateHiddenField() {
+        let hiddenInput = document.querySelector("input[name='ingredientsStr']");
+
+        if (!hiddenInput) {
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = "hidden";
+            hiddenInput.name = "ingredientsStr";
+            document.getElementById('ingredients').appendChild(hiddenInput);
+        }
+
+        hiddenInput.value = JSON.stringify(selectRecipeIngredients);
+    }
+
+    window.addEventListener('load', function () {
+        populateIngredients();
+        searchIngredients();
+    });
+  </script>
 </head>
 <body>
 <h1>레시피 수정</h1>
-<form th:action="@{/update/{id}(id=${recipe.id})}" th:object="${recipe}" method="post">
-  <label>레시피명:</label>
-  <input type="text" th:field="*{recipeName}" placeholder="레시피명"/><br/>
+<form th:action="@{/update/{id}(id=${recipe.id})}" th:object="${recipe}" method="post" enctype="multipart/form-data">
+  <div>
+    <label>현재 이미지:</label>
+    <img th:src="@{${recipe.img}}" alt="레시피 이미지" style="max-width: 300px; max-height: 200px;"/><br/>
+  </div>
+  <div>
+    <label>이미지 변경:</label>
+    <input type="file" id="img" name="image" accept="image/*"/><br/>
+  </div>
+  <div>
+    <label>레시피명:</label>
+    <input type="text" th:field="*{recipeName}" placeholder="레시피명"/><br/>
+  </div>
 
-  <label>조리법:</label>
-  <textarea th:field="*{cookery}" placeholder="조리법"></textarea><br/>
+  <div>
+    <label>재료:</label>
+    <input type="text" id="search" placeholder="재료를 검색해주세요"/>
+    <div id="result"></div>
+    <div id="ingredients"></div>
+  </div>
 
-  <label>요리 시간 (분):</label>
-  <input type="number" th:field="*{cookingTime}" placeholder="요리 시간"/><br/>
+  <div>
+    <label>조리법:</label>
+    <textarea th:field="*{cookery}" placeholder="조리법"></textarea><br/>
+  </div>
 
-  <label>난이도:</label>
-  <select th:field="*{difficultyLevel}">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">8</option>
-    <option value="10">10</option>
-  </select><br/>
+  <div>
+    <label>요리 시간 (분):</label>
+    <input type="number" th:field="*{cookingTime}" placeholder="요리 시간"/><br/>
+  </div>
+
+  <div>
+    <label>난이도:</label>
+    <select th:field="*{difficultyLevel}">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select><br/>
+  </div>
 
   <button type="submit">저장</button>
 </form>

@@ -2,11 +2,12 @@ package springfinal.recipe.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import springfinal.recipe.dto.CommentDTO;
+import springfinal.recipe.dto.RecipeIngredientDTO;
 import springfinal.recipe.mapper.RecipeMapper;
 import springfinal.recipe.dto.RecipeDTO;
-import springfinal.recipe.model.Recipe;
-import springfinal.recipe.model.Recommend;
-import springfinal.recipe.model.User;
+import springfinal.recipe.model.*;
 import springfinal.recipe.repository.RecipeRepository;
 import springfinal.recipe.repository.RecommendRepository;
 import springfinal.recipe.repository.UserRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RecipeServiceImpl implements RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
@@ -87,15 +89,33 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe existingRecipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
 
-        existingRecipe = Recipe.builder()
-                .id(existingRecipe.getId()) //기존 ID 유지
-                .recipeName(recipeDTO.getRecipeName())
-                .cookery(recipeDTO.getCookery())
-                .cookingTime(recipeDTO.getCookingTime())
-                .difficultyLevel(recipeDTO.getDifficultyLevel())
-                .userNickname(existingRecipe.getUserNickname())
-                .build();
+        // 레시피 기본 정보 업데이트
+        existingRecipe.setRecipeName(recipeDTO.getRecipeName());
+        existingRecipe.setCookery(recipeDTO.getCookery());
+        existingRecipe.setCookingTime(recipeDTO.getCookingTime());
+        existingRecipe.setDifficultyLevel(recipeDTO.getDifficultyLevel());
 
+        // 이미지 업데이트 (새로운 이미지가 제공된 경우)
+        if (recipeDTO.getImg() != null) {
+            existingRecipe.setImg(recipeDTO.getImg());
+        }
+
+        // 기존 재료 초기화 및 업데이트
+        List<RecipeIngredient> existingIngredients = existingRecipe.getIngredients();
+        existingIngredients.clear();
+
+        // 새로운 재료 추가
+        for (RecipeIngredientDTO ingredientDTO : recipeDTO.getIngredients()) {
+            RecipeIngredient ingredient = RecipeIngredient.builder()
+                    .recipe(existingRecipe) // 역참조 설정
+                    .ingredient(Ingredient.builder().id(ingredientDTO.getIngredientId()).build())
+                    .qty(ingredientDTO.getQty())
+                    .unit(ingredientDTO.getUnit())
+                    .build();
+            existingIngredients.add(ingredient);
+        }
+
+        // 업데이트된 레시피 저장
         recipeRepository.save(existingRecipe);
     }
 

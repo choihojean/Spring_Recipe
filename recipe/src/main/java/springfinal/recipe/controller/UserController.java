@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springfinal.recipe.dto.UserDTO;
+import springfinal.recipe.service.CommentService;
 import springfinal.recipe.service.UserService;
 
 import java.security.Principal;
@@ -18,6 +19,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CommentService commentService;
 
     //회원가입 페이지
     @GetMapping("/register")
@@ -110,7 +114,13 @@ public class UserController {
 
         boolean isSuccess = userService.updateUser(loggedInUser.getId(), userDTO);
 
-        return isSuccess ? "redirect:/user/profile" : "redirect:/user/edit";
+        if(isSuccess) {
+            commentService.updateCommentByUser(nickname, userDTO);
+            return "redirect:/user/profile";
+        }
+        else {
+            return "redirect:/user/edit";
+        }
     }
 
 //    //로그아웃 처리

@@ -31,6 +31,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> findAll() {
         return recipeRepository.findAll().stream()
+                .filter(recipe -> !recipe.getIs_deleted()) //삭제되지 않은 레시피만 필터링
                 .map(recipe -> {
                     RecipeDTO dto = RecipeMapper.toDTO(recipe);
                     dto.setRecommendCount((long) recipe.getRecommendations().size());
@@ -42,6 +43,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeDTO findById(long id) {
         return recipeRepository.findById(id)
+                .filter(recipe -> !recipe.getIs_deleted())
                 .map(RecipeMapper::toDTO)
                 .orElse(null);
     }
@@ -51,6 +53,7 @@ public class RecipeServiceImpl implements RecipeService {
         User user = userRepository.findByNickname(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         return recipeRepository.findByUserNickname(user).stream()
+                .filter(recipe -> !recipe.getIs_deleted())
                 .map(RecipeMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -58,6 +61,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> findByRecipeNameContaining(String name) {
         return recipeRepository.findByRecipeNameContaining(name).stream()
+                .filter(recipe -> !recipe.getIs_deleted())
                 .map(recipe -> {
                     RecipeDTO dto = RecipeMapper.toDTO(recipe);
                     dto.setRecommendCount((long) recipe.getRecommendations().size());
@@ -69,6 +73,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> findByIngredientsIngredientId(Long id) {
         return recipeRepository.findAll().stream()
+                .filter(recipe -> !recipe.getIs_deleted())
                 .filter(recipe -> recipe.getIngredients().stream()
                         .anyMatch(recipeIngredient -> recipeIngredient.getIngredient().getId().equals(id)))
                 .map(RecipeMapper::toDTO)
@@ -128,9 +133,24 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.save(existingRecipe);
     }
 
-    @Override
     public void deleteById(Long id) {
-        recipeRepository.deleteById(id);
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
+        recipe = Recipe.builder()
+                .id(recipe.getId())
+                .userNickname(recipe.getUserNickname())
+                .recipeName(recipe.getRecipeName())
+                .cookery(recipe.getCookery())
+                .cookingTime(recipe.getCookingTime())
+                .difficultyLevel(recipe.getDifficultyLevel())
+                .img(recipe.getImg())
+                .ingredients(recipe.getIngredients())
+                .recommendations(recipe.getRecommendations())
+                .comments(recipe.getComments())
+                .is_deleted(true) // 삭제 상태 설정
+                .build();
+
+        recipeRepository.save(recipe); // 업데이트된 상태로 저장
     }
 
     //recommend

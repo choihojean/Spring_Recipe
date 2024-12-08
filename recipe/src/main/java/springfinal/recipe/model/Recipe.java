@@ -37,7 +37,8 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeIngredient> ingredients = new ArrayList<>(); //레시피-재료 관계
 
-    private Boolean is_deleted; // 삭제 여부
+    @Column(nullable = false)
+    private Boolean is_deleted = false; // 삭제 여부
 
     public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;

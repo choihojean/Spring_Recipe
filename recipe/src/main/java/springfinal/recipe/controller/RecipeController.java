@@ -70,6 +70,11 @@ public class RecipeController {
     @GetMapping("/detail/{id}")
     public String recipeDetail(@PathVariable("id") Long id, Model model, Authentication authentication) {
         RecipeDTO recipe = recipeService.findById(id);
+
+        if (recipe == null || recipe.getIs_deleted()) { // 삭제된 레시피 처리
+            return "redirect:/main"; // 메인 페이지로 리다이렉트
+        }
+
         model.addAttribute("recipe", recipe);
 
         if (authentication != null && authentication.isAuthenticated()) {
@@ -133,16 +138,31 @@ public class RecipeController {
         return "redirect:/main";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteRecipe(@PathVariable("id") Long id) {
-        recipeService.deleteById(id);
-        return "redirect:/main";
+    @PostMapping("/delete/{id}")
+    public String deleteRecipe(@PathVariable("id") Long id, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login"; // 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
+        }
+
+        String username = authentication.getName();
+        RecipeDTO recipe = recipeService.findById(id);
+
+        if (recipe == null || !recipe.getUserNickname().getNickname().equals(username)) {
+            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        }
+
+        recipeService.deleteById(id); // 개념적 삭제 처리
+        return "redirect:/main"; // 삭제 후 메인 페이지로 리다이렉트
     }
 
     // 수정 페이지로 이동
     @GetMapping("/edit/{id}")
     public String editRecipeForm(@PathVariable("id") Long id, Authentication authentication, Model model) {
         RecipeDTO recipe = recipeService.findById(id);
+
+        if (recipe == null || recipe.getIs_deleted()) {
+            return "redirect:/main";
+        }
 
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login"; //로그인되지 않은 경우 로그인 페이지로

@@ -93,6 +93,7 @@ public class RecipeServiceImpl implements RecipeService {
                 .difficultyLevel(recipe.getDifficultyLevel())
                 .userNickname(user) // 작성자 설정
                 .img(recipe.getImg())
+                .is_deleted(false)
                 .build();
         Recipe savedRecipe = recipeRepository.save(recipe);
         return savedRecipe.getId();

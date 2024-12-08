@@ -117,9 +117,51 @@
         }
     </style>
     <script>
+        function searchIngredients() {
+            const searchSelect = document.getElementById('searchSelect');
+            const searchResult = document.getElementById('searchResult');
+            const search = document.getElementById('search');
+            let controller = new AbortController();
+
+            search.addEventListener('input', function () {
+                if (search.value === "" || searchSelect.value === "recipe") {
+                    searchResult.replaceChildren();
+                } else {
+                    searchResult.replaceChildren();
+                    const param = new URLSearchParams({ "name": search.value });
+                    fetch(`/api/ingredient/search?${param.toString()}`, { signal: controller.signal })
+                        .then(res => {
+                            if (!res.ok) {
+                                throw new Error("error");
+                            }
+                            return res.json();
+                        })
+                        .then(data => {
+                            searchResult.replaceChildren();
+                            data.forEach(ingredient => {
+                                const ingredientP = document.createElement('p');
+                                ingredientP.textContent = ingredient.ingredientName;
+
+                                searchResult.appendChild(ingredientP);
+
+                                ingredientP.addEventListener("click", function () {
+                                    search.value = ingredient.ingredientName;
+                                    searchResult.replaceChildren();
+                                });
+                            });
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+            });
+        }
+
         function navigateToDetail(id) {
             window.location.href = '/detail/' + id;
         }
+
+        window.addEventListener('load', searchIngredients);
     </script>
 </head>
 <body>
@@ -138,15 +180,16 @@
         <a th:href="@{/main}" th:if="${isSearch}">전체 목록 보기</a>
     </div>
     <form action="/search" method="get" class="search-container">
-        <select name="type" class="search-select" style="width: 150px; margin-right: 10px;">
+        <select id="searchSelect" name="type" class="search-select" style="width: 150px; margin-right: 10px;">
             <option value="recipe">레시피</option>
             <option value="ingredient">재료</option>
         </select>
-        <input type="text" name="name" placeholder="검색어 입력" class="search-input">
+        <input type="text" id="search" name="name" placeholder="검색어 입력" class="search-input">
         <button type="submit" class="search-button">
             <span class="material-symbols-outlined">search</span>
         </button>
     </form>
+    <div id="searchResult"></div>
     <div th:if="${type == 'recipe'}" class="recipe-list">
         <div th:each="recipe : ${results}" class="recipe-item" th:onclick="navigateToDetail([[${recipe.id}]])">
             <img th:src="${recipe.img}" class="recipe-image">

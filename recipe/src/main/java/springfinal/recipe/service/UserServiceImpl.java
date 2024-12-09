@@ -1,6 +1,7 @@
 package springfinal.recipe.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import springfinal.recipe.mapper.RecipeMapper;
@@ -102,6 +103,7 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         userRepository.save(user);
+        SecurityContextHolder.clearContext();
     }
 
 }

@@ -132,22 +132,22 @@ public class UserController {
 
     // 회원 탈퇴 처리
     @PostMapping("/delete")
-    public String deleteUser(Authentication authentication) {
+    public String deleteUser(Authentication authentication, HttpSession session) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/user/login"; // 인증되지 않은 사용자라면 로그인 페이지로 리다이렉트
+            return "redirect:/user/login";
         }
 
-        // 현재 인증된 사용자의 닉네임 가져오기
         String nickname = authentication.getName();
         UserDTO user = userService.findByNickname(nickname);
 
         if (user == null) {
-            return "redirect:/user/login"; // 사용자 정보가 없는 경우 로그인 페이지로 리다이렉트
+            return "redirect:/user/login"; //사용자 정보가 없는 경우 로그인 페이지
         }
 
-        userService.deleteUser(user.getId()); // 사용자 삭제 처리
-        SecurityContextHolder.clearContext(); //Spring Security 컨텍스트 초기화
+        userService.deleteUser(user.getId());
+        SecurityContextHolder.clearContext();
+        session.invalidate(); //세션 만료 처리
 
-        return "redirect:/main"; // 탈퇴 후 메인 페이지로 이동
+        return "redirect:/main";
     }
 }

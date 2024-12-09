@@ -66,10 +66,36 @@
 
                 const commentContent = document.createElement('p');
                 commentContent.classList.add('comment-content');
-                commentContent.textContent = comment.content;
+                commentContent.textContent = comment.is_deleted ? "삭제된 댓글입니다." : comment.content;
 
                 commentDiv.appendChild(commentTitle);
                 commentDiv.appendChild(commentContent);
+
+                if(!comment.is_deleted) {
+                    const commentDeleteButton = document.createElement('button');
+                    commentDeleteButton.textContent = '삭제';
+                    commentDiv.appendChild(commentDeleteButton);
+
+                    commentDeleteButton.addEventListener('click', function () {
+                        fetch(`/api/comments/${comment.id}`, {method: 'DELETE'})
+                            .then(res => {
+                                if (!res.ok) {
+                                    throw new Error("error");
+                                }
+                                return res.json();
+                            })
+                            .then(result => {
+                                if(result) {
+                                    alert("댓글이 성공적으로 삭제되었습니다.");
+                                } else {
+                                    alert("댓글 삭제에 실패했습니다.");
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    })
+                }
 
                 container.appendChild(commentDiv);
 
@@ -80,46 +106,48 @@
                 }
 
                 commentDiv.addEventListener('click', function () {
-                    if(container.childElementCount == 1) {
-                        const commentForm = document.createElement('form');
-                        commentForm.id = `comment${comment.id}`;
-                        commentForm.method = "POST";
-                        commentForm.action = "/api/comments";
-                        commentForm.className = "comment-form";
+                    if(!comment.is_deleted) {
+                        if(container.childElementCount == 1) {
+                            const commentForm = document.createElement('form');
+                            commentForm.id = `comment${comment.id}`;
+                            commentForm.method = "POST";
+                            commentForm.action = "/api/comments";
+                            commentForm.className = "comment-form";
 
-                        const commentContent = document.createElement('textarea');
-                        commentContent.placeholder = "댓글을 입력하세요...";
-                        commentContent.rows = 2;
-                        commentContent.name = "content";
+                            const commentContent = document.createElement('textarea');
+                            commentContent.placeholder = "댓글을 입력하세요...";
+                            commentContent.rows = 2;
+                            commentContent.name = "content";
 
-                        const hiddenRecipeId = document.createElement('input');
-                        hiddenRecipeId.type = "hidden";
-                        hiddenRecipeId.name = "recipeId";
-                        hiddenRecipeId.value = comment.recipeId;
+                            const hiddenRecipeId = document.createElement('input');
+                            hiddenRecipeId.type = "hidden";
+                            hiddenRecipeId.name = "recipeId";
+                            hiddenRecipeId.value = comment.recipeId;
 
-                        const hiddenParentCommentId = document.createElement('input');
-                        hiddenParentCommentId.type = "hidden";
-                        hiddenParentCommentId.name = "parentCommentId";
-                        hiddenParentCommentId.value = comment.id;
+                            const hiddenParentCommentId = document.createElement('input');
+                            hiddenParentCommentId.type = "hidden";
+                            hiddenParentCommentId.name = "parentCommentId";
+                            hiddenParentCommentId.value = comment.id;
 
-                        const submitButton = document.createElement('button');
-                        submitButton.type = "submit";
-                        submitButton.textContent = "댓글 작성";
+                            const submitButton = document.createElement('button');
+                            submitButton.type = "submit";
+                            submitButton.textContent = "댓글 작성";
 
-                        commentForm.appendChild(commentContent);
-                        commentForm.appendChild(hiddenRecipeId);
-                        commentForm.appendChild(hiddenParentCommentId);
-                        commentForm.appendChild(submitButton);
+                            commentForm.appendChild(commentContent);
+                            commentForm.appendChild(hiddenRecipeId);
+                            commentForm.appendChild(hiddenParentCommentId);
+                            commentForm.appendChild(submitButton);
 
-                        container.appendChild(commentForm);
-                    }
-                    else {
-                        const commentForm = document.getElementById(`comment${comment.id}`);
-                        if(commentForm.style.display === "") {
-                            commentForm.style.display = "none";
+                            container.appendChild(commentForm);
                         }
                         else {
-                            commentForm.style.display = "";
+                            const commentForm = document.getElementById(`comment${comment.id}`);
+                            if(commentForm.style.display === "") {
+                                commentForm.style.display = "none";
+                            }
+                            else {
+                                commentForm.style.display = "";
+                            }
                         }
                     }
                 });

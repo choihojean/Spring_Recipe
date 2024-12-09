@@ -13,7 +13,6 @@ import springfinal.recipe.repository.RecipeRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -47,6 +46,7 @@ public class CommentServiceImpl implements CommentService {
                 .content(content)
                 .parentComment(parentComment)
                 .userNickname(userNickname)
+                .is_deleted(false)
                 .build();
 
         commentRepository.save(comment);
@@ -57,5 +57,16 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> comments = commentRepository.findByUserNickname(nickname);
         comments.forEach(comment -> comment.setUserNickname(userDTO.getNickname()));
         commentRepository.saveAll(comments);
+    }
+
+    @Override
+    public boolean deleteComment(Long id, String nickname) {
+        Comment comment = commentRepository.findById(id).orElse(null);
+        if(comment != null && comment.getUserNickname().equals(nickname)) {
+            comment.setIsDeleted(true);
+            commentRepository.save(comment);
+            return true;
+        }
+        return false;
     }
 }

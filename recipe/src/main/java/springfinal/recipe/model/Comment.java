@@ -37,4 +37,8 @@ public class Comment {
     public void setUserNickname(String userNickname) {
         this.userNickname = userNickname;
     }
+    public void setIsDeleted(boolean isDeleted) {
+        this.is_deleted = isDeleted;
+    }
+
 }

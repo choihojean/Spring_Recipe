@@ -33,4 +33,12 @@ public class CommentController {
 
         return String.format("<script>window.location.href='/detail/%d';</script>", recipeId);
     }
+
+    @DeleteMapping("/api/comments/{id}")
+    public boolean deleteComment(@PathVariable("id") Long commentId, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false; // 로그인 필요
+        }
+        return commentService.deleteComment(commentId, authentication.getName());
+    }
 }

@@ -13,4 +13,6 @@ public interface CommentService {
     void saveComment(Long recipeId, String content, Long parentCommentId, String userNickname);
 
     void updateCommentByUser(String nickname, UserDTO userDTO);
+
+    boolean deleteComment(Long id, String nickname);
 }
